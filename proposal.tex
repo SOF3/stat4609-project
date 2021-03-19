@@ -1,0 +1,114 @@
+% This version of CVPR template is provided by Ming-Ming Cheng.
+% Please leave an issue if you found a bug:
+% https://github.com/MCG-NKU/CVPR_Template.
+
+\documentclass[final]{cvpr}
+
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+\usepackage{csquotes}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\confYear{2021}
+%\setcounter{page}{4321} % For final version only
+
+\newcommand{\q}[1]{\enquote{#1}}
+
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{
+	Project proposal \\~\\
+	\large{Team name: M2 Robo}
+}
+
+\author{
+	Lee Chun Yin\\
+	3035469140\\
+	\and
+	Chiu Yu Ying\\
+	3035477630
+	\and
+	Chan Kwan Yin\\
+	3035466978 \\
+	Team leader
+}
+
+\maketitle
+
+\clearpage
+
+\section{Data set to analyze}
+
+We will analyze the \q{Netflix Prize} dataset.
+
+\section{Proposed methodology}
+We are going to construct the following three models to analzye the data set
+and compare their performance.
+
+\subsection{KNN}
+We will include item-based $k$-nearest neighbours (KNN) as the first model.
+It is a kind of neighbourhood-based approaches, which are popular collaborative filtering methods in previous competitions (Progress Prize 2008's KNNMovie).
+The item-item correlation $\rho_{ij}$ between item $i, j$ will be calculated based on the ratings of users who rated both movies
+using different statistics such as Pearson and Spearman correlation.
+It is a robust classifier with a simple implementation and involves few parameters to tune (e.g. distance metric and $k$).
+However, it is sensitive to outliers during the choice of neighbour process based on distance criteria.
+Furthermore, KNN does not output rating values,
+reducing the interpretability of the recommendation results
+and hinders the potential to compare with other data directly.
+
+\subsection{Simple SVD}
+Our second model will use the \q{SVD} model,
+proposed by Yehuda Koren~\cite{CollabFiltering}.
+The model predicts the rating for movie $i$ by user $u$ in the form
+$$ \hat r_{ui} = \mu + b_u + b_i + \mathbf q_i \cdot \mathbf p_u $$
+where the parameters to train are \begin{itemize}
+	\item $\mu$ is the mean rating
+	\item $b_u(t)$ is a time-sensitive user-specific bias predicted by parameter binning
+	\item $b_i(t)$ is a time-sensitive item-specific bias predicted by parameter binning
+	\item $\mathbf q_i$ and $\mathbf p_u$ are latent factors
+		produced from matrix factorization with simple stochastic gradient descent
+		after the ratings are offset by the bias.
+\end{itemize}
+
+Compared to KNN, SVD provides better serendipity
+since it computes all movies globally and provides a single objective metric,
+unlike KNN, which largely depends on the user's similarity to other users.
+However, this method requires more training time
+since it involves a collection of different parameters to tune.
+
+\subsection{SVD++}
+The third model is a modification to the SVD model
+by introducing time effects.
+We will bin the training data over time intervals
+and train the parameters $b_u, b_i, \mathbf p_u$ as functions in terms of rating date $t$,
+where each user-bin is considered as a separate $u$ in the factorization.
+This idea is a simplification based on the \q{SVD++} model
+proposed by BellKor in Progress Prize 2008~\cite{BellKor2008}.
+
+Since this model additionally considers time effect,
+it is speculated that it performs no worse than the simple SVD model.
+The temporal effects of item bias, user bias and user-preference bias
+are thoroughly explained in BellKor's paper~\cite{BellKor2008}.
+However, since recommendation systems are often only useful for predicting future events,
+the time-dependent functions may be somehow extrapolated to the future,
+while extrapolation is known to be unreliable.
+Nevertheless, this is helpful in offseting rating bias during training.
+
+{\small
+	\bibliographystyle{ieee_fullname}
+	\bibliography{egbib}
+}
+
+\end{document}

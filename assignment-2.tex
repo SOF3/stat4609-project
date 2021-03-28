@@ -63,11 +63,11 @@ and $\hat r_{ij}$ is estimated based on the known values $r_{n_1j}, \ldots, r_{n
 
 \subsection{Nearness metrics}
 The similarity metric $d : \mathbb R^n \times \mathbb R^n \to \mathbb R$ used in the KNN model satisfies
-$$ \begin{cases}
+\begin{equation} \label{eq:metric} \begin{cases}
 	d(x, y) = 0 &\iff x = y \\
 	d(x, y) > 0 &\iff x \ne y \\
 	d(x, y) = d(y, x) &\forall x, y
-\end{cases} $$
+\end{cases} \end{equation}
 
 While $d(i, j) < d(i, k)$ implies that $j$ is more simila to $i$ than $k$ is,
 it is not necessary that the metric follows the triangular inequality.
@@ -79,14 +79,14 @@ the correlation between user $u_i$ and the other user $u_j$
 would be the coefficient between the two distributions $R_i$ and $R_j$:
 $$ \rho_{ij} = \frac{E[(R_i - \mu_i)(R_j - \mu_j)]}{\sigma_i \sigma_j} $$
 
-To get the k similar data by considering the M movies that both user $u_i$ and $u_j$ have, we estimate the co-variance and variances:
-$$ E[(R_i-\mu_i)(R_j-\mu_j)] \approx \frac{1}{M} \sum_k (r_{ik} - \mu_i) (r_{jk} - \mu_j)$$
-$$ \sigma_i \approx \sqrt{\frac{1}{M} \sum_k (r_{ik} - \mu_i)} ,
- \sigma_j \approx \sqrt{\frac{1}{M} \sum_k (r_{jk} - \mu_i) ,}$$
+To get the $k$ similar data by considering the $n$ movies that both user $u_i$ and $u_j$ have, we estimate the co-variance and variances:
+$$ E[(R_i-\mu_i)(R_j-\mu_j)] \approx \frac{1}{n} \sum_k (r_{ik} - \mu_i) (r_{jk} - \mu_j)$$
+$$ \sigma_i \approx \sqrt{\frac{1}{n} \sum_k (r_{ik} - \mu_i)} ,
+ \sigma_j \approx \sqrt{\frac{1}{n} \sum_k (r_{jk} - \mu_i) ,}$$
 
-Note that the range of the Pearson Correlation Coefficient is $[-1,1]$
-while the matrix in KNN does not contain negative value usually~\cite{Alpher01}.
-Therefore, we define $$ d(i, j) = 1 - \rho_{ij} $$
+Note that the range of the Pearson Correlation Coefficient is $[-1,1]$.
+To make the coefficient satisfy the conditions in~\ref{eq:metric}
+and not have negative values~\cite{Alpher01}, we define $$ d(i, j) = 1 - \rho_{ij} $$
 such that $d$ has the range $[0, 2]$.
 A smaller value implies higher similarity between users.
 

@@ -65,7 +65,7 @@ and $\hat r_{ij}$ is estimated based on the known values $r_{n_1j}, \ldots, r_{n
 The similarity metric $d : \mathbb R^n \times \mathbb R^n \to \mathbb R$ used in the KNN model satisfies
 \begin{equation} \label{eq:metric} \begin{cases}
 	d(x, y) = 0 &\iff x = y \\
-	d(x, y) > 0 &\iff x \ne y \\
+	0 < d(x, y) \leq 1 &\iff x \ne y \\
 	d(x, y) = d(y, x) &\forall x, y
 \end{cases} \end{equation}
 
@@ -121,6 +121,12 @@ $\hat r_{ij}$ can be estimated by aggregating $\Set{ r_{n_1j}, r_{n_2j}, \ldots,
 A naive aggregation method is to just take the arithmetic mean of these rating values
 without considering other factors such as the actual correlation.
 
+Considering the case when all the similar users do not have a rating of the movie, the rating may be high due to the other less similar users. We believed that implementing the weights based on the similarity is important:
+
+$$ \hat r_{uj} = \mu_u + \frac{\sum_{v \in P_u(j)}  Sim(u,v)\cdot(r_{vj}-\mu_v)}{\sum_{v \in P_u(j) |Sim(u,v)|}}  $$
+
+Following this formula, the more similar user's rating will have higher weight.
+
 \section{Technical Details}
 The training data set provided by Netflix consists of more than 100 million ratings with 17770 movies and 480189 users.
 Such a huge data set would consume a significant amount of training time and memory
@@ -167,22 +173,82 @@ $$ \text{RMSE} = \sqrt{\sum_{(i, j) \in E} \frac{{(\hat r_{ij} - r_{ij})}^2}{\le
 where $E$ is the set of retained evaluation data.
 
 \section{Model performance}
-The following table exhaustively lists our test results.
+The following table exhaustively lists our test results. The RMSE of the baseline is $1.2062313640217561$.
 
-\begin{tabular}{|c|c|c|c|}
-	\hline
-	$k$ & Similarity metric & Aggregation function & RMSE
-	\\ \hline
-	$10$ & Euclidean & Naive arithmetic mean & $1.20094589890527$
-	\\ \hline
-	$10$ & Taxicab & Naive arithmetic mean & $1.1948902737623308$
-	\\ \hline
-	$10$ & Pearson & Naive arithmetic mean & $1.2001428015368176$
-	\\ \hline
-	$10$ & Spearman & Naive arithmetic mean & $1.1996683300387065$
-	\\ \hline
+% \begin{tabular}{|c|c|c|c|}
+% 	\hline
+% 	$k$ & Similarity metric & Aggregation function & RMSE
+% 	\\ \hline
+% 	$10$ & Euclidean & Naive arithmetic mean & $1.20094589890527$
+% 	\\ \hline
+% 	$10$ & Taxicab & Naive arithmetic mean & $1.1948902737623308$
+% 	\\ \hline
+% 	$10$ & Pearson & Naive arithmetic mean & $1.2001428015368176$
+% 	\\ \hline
+% 	$10$ & Spearman & Naive arithmetic mean & $1.1996683300387065$
+% 	\\ \hline
+% \end{tabular}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Euclidean}}\\
+    \hline
+    $k$ & Aggregation function & RMSE\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.1828937133391502$\\
+    \hline
+    $10$ & Weighted & $1.2347629060607566$\\
+    \hline
+\end{tabular}\\
+
+\hspace{2em}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Taxicab}}\\
+    \hline
+    $k$ & Aggregation function & RMSE\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.1826669333812787$\\
+    \hline
+    $10$ & Weighted & $1.2359882912097488$\\
+    \hline
+\end{tabular}\\
+
+\hspace{2em}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Pearson}}\\
+    \hline
+    $k$ & Aggregation function & RMSE\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.1964910584114306$\\
+    \hline
+    $10$ & Weighted & $1.2076590696961116$\\
+    \hline
+\end{tabular}\\
+
+\hspace{2em}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Spearman}}\\
+    \hline
+    $k$ & Aggregation function & RMSE\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.2084831045336266$\\
+    \hline
+    $10$ & Weighted & $1.208482338367309$\\
+    \hline
 \end{tabular}
 
+\hspace{10em}
+
+For the naive arithmetic mean, the Euclidean and Taxicab have a better performance than that of baseline but Pearson and Spearman are not in the case.
+
+For the Weighted method, all metrics did not have better performance than that of baseline. One possible reason for this is related to the lack of data for similar users. When most of the similar users did not have a rating of the movie we are predicting, the formula of weighted average may not include enough information and therefore led to less accurate predictions.
+      
 {\small
 	\bibliographystyle{ieee_fullname}
 	\bibliography{egbib}

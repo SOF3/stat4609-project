@@ -61,7 +61,7 @@ To predict the rating $\hat r_{ij}$ of user $i$ on movie $j$ ($1 \le i \le m, 2 
 the $k$ most similar users ($n_1, \ldots, n_k$) to user $i$ are computed based on similar choices of ratings,
 and $\hat r_{ij}$ is estimated based on the known values $r_{n_1j}, \ldots, r_{n_kj}$.
 
-\subsection{Nearness metrics}
+\subsection{Similarity (Nearness) metrics}
 The similarity metric $d : \mathbb R^n \times \mathbb R^n \to \mathbb R$ used in the KNN model satisfies
 \begin{equation} \label{eq:metric} \begin{cases}
 	d(x, y) = 0 &\iff x = y \\
@@ -69,7 +69,7 @@ The similarity metric $d : \mathbb R^n \times \mathbb R^n \to \mathbb R$ used in
 	d(x, y) = d(y, x) &\forall x, y
 \end{cases} \end{equation}
 
-While $d(i, j) < d(i, k)$ implies that $j$ is more simila to $i$ than $k$ is,
+While $d(i, j) < d(i, k)$ implies that $j$ is more similar to $i$ than $k$ is,
 it is not necessary that the metric follows the triangular inequality.
 This enables the use of correlation coefficients in addition to common norm metrics.
 

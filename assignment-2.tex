@@ -88,8 +88,9 @@ $$ \sigma_i \approx \sqrt{\frac{1}{n} \sum_k (r_{ik} - \mu_i)} ,
  \sigma_j \approx \sqrt{\frac{1}{n} \sum_k (r_{jk} - \mu_i) ,}$$
 
 Note that the range of the Pearson Correlation Coefficient is $[-1,1]$.
-To make the coefficient satisfy the conditions in~\ref{eq:metric}
-and not have negative values, we define $$ d(i, j) = 1 - \rho_{ij} $$
+To make the coefficient satisfy the conditions in Equation~\ref{eq:metric}
+and not have negative values, we definean extraordinarily narrow situation
+$$ d(i, j) = \frac12 \left(1 - \rho_{ij}\right) $$
 such that $d$ has the range $[0, 2]$.
 A smaller value implies higher similarity between users.
 
@@ -105,7 +106,7 @@ $$ \rho_{ij} = \frac{
 } $$
 
 Similar to Pearson Correlation, the metric based on Spearman correlation is defined as
-$$ d(i, j) = 1 - \rho_{ij} $$
+$$ d(i, j) = \frac12 \left(1 - \rho_{ij}\right) $$
 
 \subsubsection{Euclidean Distance}
 We take the $2$-norm squared:
@@ -121,14 +122,16 @@ $$ d(i, j) = \sum_{l=1}^n \left| r_{il} - r_{jl} \right| $$
 This can be thought as the cosine of the angle between the two vectors of ratings.
 We define
 
-$$ d(i, j) = \frac1{ \norm{\tilde{\mathbf r}_{i\cdot}} 
-+ \norm{\tilde{\mathbf r}_{j\cdot}} }
+$$ \rho(i, j) = \frac1{ \norm{\tilde{\mathbf r}_{i\cdot}} + \norm{\tilde{\mathbf r}_{j\cdot}} }
 \sum_{l=1}^n \left( \tilde r_{il} \tilde r_{jl} \right) $$
+
+We further rescale the metric to the range $[0, 1]$ using the same strategy as in correlations:
+$$ d(i, j) = \frac12 \left(1 - \rho(i, j)\right) $$
 
 This metric is sensitive to the exact value (rather than just relative difference);
 a negative value could imply that the user does not like the data.
 Therefore, we propose two mechanisms for rescaling the ratings,
-using $\tilde r_{ij} = r_{ij} - \bar{\mathbf r_{\cdot\cdot}}$
+using $\tilde r_{ij} = r_{ij} - \overline{\mathbf r_{\cdot\cdot}}$
 and $\tilde r_{ij} = r_{ij} - 3$ respectively,
 where $3$ is the standard rating for "neutral".
 
@@ -141,9 +144,10 @@ without considering other factors such as the actual correlation.
 
 Considering the case when all the similar users do not have a rating of the movie, the rating may be high due to the other less similar users. We believed that implementing the weights based on the similarity is important:
 
-$$ \hat r_{uj} = \mu_u + \frac{\sum_{v \in P_u(j)}  Sim(u,v)\cdot(r_{vj}-\mu_v)}{\sum_{v \in P_u(j) |Sim(u,v)|}}  $$
+$$ \hat r_{ij} = \mu_j + \frac{\sum_{v \in P(i)} d(i, v) (r_{vj}-\mu_j)}
+{\sum_{v \in P(i)} \left| d(i, v) \right|}  $$
 
-Following this formula, the more similar user's rating will have higher weight.
+This formula increases the effect of more similar users on the rating prediction.
 
 \section{Technical Details}
 The training data set provided by Netflix consists of more than 100 million ratings with 17770 movies and 480189 users.
@@ -172,18 +176,19 @@ In this KNN model, there are three hyperparameter to be selected, namely
 \subsubsection{Choice of $k$}
 A large value of $k$ would reduce accuracy as users with lower similarity are selected.
 On the other hand, a small value of $k$ would be biased over the choice of the most similar user.
+For the initial experiment, we only tested with $k=10$.
 
-As a baseline model, we also set $k=n$, i.e.
-to evaluate the RMSE by taking all functions regardless the metric and using only naive arithmeitc mean for aggregation.
-
-% TODO evaluate other choices of k
+As a baseline model, we also set $k=m$, i.e.
+to evaluate the RMSE by taking the plain arithmetic mean of all users.
 
 \subsubsection{Choice of metric}
-Since the ratings are discrete in nature, it is expected that little difference is observed between the different metrics.
+Since the ratings are discrete in nature,
+little difference is expected between the different metrics,
+with the exception of the cosine metric,
+which is sensitive to the exact value.
 
 \subsubsection{Choice of Aggregation function}
-Aggregation can be tuned by the similarity metric.
-% TODO implement and evaluate other choices of aggregation functions
+For every metric, we compute both the unweighted and weighted aggregates and compare the results.
 
 \subsection{Predictive test set score (RMSE)}
 The model is evaluated by computing the RMSE between predicted and actual rating values:
@@ -194,19 +199,7 @@ where $E$ is the set of retained evaluation data.
 The following table exhaustively lists our test results.
 The RMSE of the baseline is $1.1977149830409672$.
 
-% \begin{tabular}{|c|c|c|c|}
-% 	\hline
-% 	$k$ & Similarity metric & Aggregation function & RMSE
-% 	\\ \hline
-% 	$10$ & Euclidean & Naive arithmetic mean & $1.20094589890527$
-% 	\\ \hline
-% 	$10$ & Taxicab & Naive arithmetic mean & $1.1948902737623308$
-% 	\\ \hline
-% 	$10$ & Pearson & Naive arithmetic mean & $1.2001428015368176$
-% 	\\ \hline
-% 	$10$ & Spearman & Naive arithmetic mean & $1.1996683300387065$
-% 	\\ \hline
-% \end{tabular}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -214,13 +207,13 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1743212065844748$\\
+    $10$ & Unweighted mean & $1.1743212065844748$\\
     \hline
     $10$ & Weighted & $1.174185480169039$\\
     \hline
 \end{tabular}\\
 
-\hspace{2em}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -228,13 +221,13 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1761011327320081c$\\
+    $10$ & Unweighted mean & $1.1761011327320081c$\\
     \hline
     $10$ & Weighted & $1.1758026291697672$\\
     \hline
 \end{tabular}\\
 
-\hspace{2em}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -242,13 +235,13 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1807121450228732$\\
+    $10$ & Unweighted mean & $1.1807121450228732$\\
     \hline
-    $10$ & Weighted & $1.17781506242924$\\
+    $10$ & Weighted & $1.1800525348636057$\\
     \hline
 \end{tabular}\\
 
-\hspace{2em}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -256,13 +249,13 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1064212349492457$\\
+    $10$ & Unweighted mean & $1.1064212349492457$\\
     \hline
-    $10$ & Weighted & $1.0975696560484718$\\
+    $10$ & Weighted & $1.104635214204885$\\
     \hline
 \end{tabular}\\
 
-\hspace{2em}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -270,13 +263,13 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1977283650557216$\\
+    $10$ & Unweighted mean & $1.1977283650557216$\\
     \hline
     $10$ & Weighted & $1.1977314956919407$\\
     \hline
 \end{tabular}\\
 
-\hspace{2em}
+\vspace{1em}
 
 \begin{tabular}{| c | c | c |}
     \hline
@@ -284,17 +277,32 @@ The RMSE of the baseline is $1.1977149830409672$.
     \hline
 		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1981137810682911$\\
+    $10$ & Unweighted mean & $1.1981137810682911$\\
     \hline
     $10$ & Weighted & $1.1981166551209421$\\
     \hline
 \end{tabular}
 
-\hspace{10em}
+\vspace{1em}
 
-For the naive arithmetic mean, the Euclidean and Taxicab have a better performance than that of baseline but Pearson and Spearman are not in the case.
+\subsection{Discussion}
+The results are mostly very similar to or even worse than the baseline value.
 
-For the Weighted method, all metrics did not have better performance than that of baseline. One possible reason for this is related to the lack of data for similar users. When most of the similar users did not have a rating of the movie we are predicting, the formula of weighted average may not include enough information and therefore led to less accurate predictions.
+\subsubsection{Cosine metric}
+Among all metrics, the cosine metric with mean-corrected ratings
+appears to have the best result.
+This is probably because the cosine metric is effective in characterizing
+how different a user is from the "normal" user;
+for example, if a movie is rated with an average of $4$,
+the contrast between rating $3$ and $5$ is much more significant than
+that between $1$ and $3$,
+as is reflected by the fact that the former is different by $0.707$
+while the latter is $0.242$.
+
+\subsubsection{Aggregation method}
+It is observed that weighted average performs similarly to or even worse than the unweighted mean.
+
+For the weighted method, all metrics did not have better performance than that of baseline. One possible reason for this is related to the lack of data for similar users. When most of the similar users did not have a rating of the movie we are predicting, the formula of weighted average may not include enough information and therefore led to less accurate predictions.
 
 \section{Future work}
 We noticed several problems in our design and plan to resolve them in the future weeks.

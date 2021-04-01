@@ -85,7 +85,7 @@ $$ \rho_{ij} = \frac{E[(R_i - \mu_i)(R_j - \mu_j)]}{\sigma_i \sigma_j} $$
 To get the $k$ similar data by considering the $n$ movies that both user $u_i$ and $u_j$ have, we estimate the co-variance and variances:
 $$ E[(R_i-\mu_i)(R_j-\mu_j)] \approx \frac{1}{n} \sum_k (r_{ik} - \mu_i) (r_{jk} - \mu_j)$$
 $$ \sigma_i \approx \sqrt{\frac{1}{n} \sum_k (r_{ik} - \mu_i)} ,
- \sigma_j \approx \sqrt{\frac{1}{n} \sum_k (r_{jk} - \mu_i) ,}$$
+\sigma_j \approx \sqrt{\frac{1}{n} \sum_k (r_{jk} - \mu_i) ,}$$
 
 Note that the range of the Pearson Correlation Coefficient is $[-1,1]$.
 To make the coefficient satisfy the conditions in Equation~\ref{eq:metric}
@@ -202,85 +202,85 @@ The RMSE of the baseline is $1.1977149830409672$.
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Euclidean}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1743212065844748$\\
-    \hline
-    $10$ & Weighted & $1.174185480169039$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Euclidean}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1743212065844748$\\
+	\hline
+	$10$ & Weighted & $1.174185480169039$\\
+	\hline
 \end{tabular}\\
 
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Taxicab}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1761011327320081c$\\
-    \hline
-    $10$ & Weighted & $1.1758026291697672$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Taxicab}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1761011327320081c$\\
+	\hline
+	$10$ & Weighted & $1.1758026291697672$\\
+	\hline
 \end{tabular}\\
 
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Cosine with $3$-corrected ratings}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1807121450228732$\\
-    \hline
-    $10$ & Weighted & $1.1800525348636057$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Cosine with $3$-corrected ratings}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1807121450228732$\\
+	\hline
+	$10$ & Weighted & $1.1800525348636057$\\
+	\hline
 \end{tabular}\\
 
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Cosine with mean-corrected ratings}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1064212349492457$\\
-    \hline
-    $10$ & Weighted & $1.104635214204885$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Cosine with mean-corrected ratings}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1064212349492457$\\
+	\hline
+	$10$ & Weighted & $1.104635214204885$\\
+	\hline
 \end{tabular}\\
 
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Pearson}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1977283650557216$\\
-    \hline
-    $10$ & Weighted & $1.1977314956919407$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Pearson}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1977283650557216$\\
+	\hline
+	$10$ & Weighted & $1.1977314956919407$\\
+	\hline
 \end{tabular}\\
 
 \vspace{1em}
 
 \begin{tabular}{| c | c | c |}
-    \hline
-    \multicolumn{3}{|c|}{\textbf{Spearman}}\\
-    \hline
-		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
-    \hline
-    $10$ & Unweighted mean & $1.1981137810682911$\\
-    \hline
-    $10$ & Weighted & $1.1981166551209421$\\
-    \hline
+	\hline
+	\multicolumn{3}{|c|}{\textbf{Spearman}}\\
+	\hline
+	$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+	\hline
+	$10$ & Unweighted mean & $1.1981137810682911$\\
+	\hline
+	$10$ & Weighted & $1.1981166551209421$\\
+	\hline
 \end{tabular}
 
 \vspace{1em}

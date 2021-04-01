@@ -151,7 +151,7 @@ Such a huge data set would consume a significant amount of training time and mem
 ($O(m^2 n)$, since a correlation matrix between users is to be constructed),
 which is not possible for our hardware available.
 Therefore, only a subset of data is used for evaluation.
-To be specific, only first $1000$ movies and first $1000$ users that appear in the data set are considered.
+To be specific, only first $10000$ movies and first $1000$ users that appear in the data set are considered.
 
 \subsection{Data preprocessing}
 The first 1000 movies are loaded into a numpy array with columns of Movie ID, User ID and Rating.
@@ -191,7 +191,8 @@ $$ \text{RMSE} = \sqrt{\sum_{(i, j) \in E} \frac{{(\hat r_{ij} - r_{ij})}^2}{\le
 where $E$ is the set of retained evaluation data.
 
 \section{Model performance}
-The following table exhaustively lists our test results. The RMSE of the baseline is $1.2062313640217561$.
+The following table exhaustively lists our test results.
+The RMSE of the baseline is $1.2062313640217561$.
 
 % \begin{tabular}{|c|c|c|c|}
 % 	\hline

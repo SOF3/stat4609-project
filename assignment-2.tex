@@ -12,6 +12,7 @@
 
 % Include other packages here, before hyperref.
 \usepackage{csquotes}
+\usepackage{mathtools}
 
 % If you comment hyperref and then uncomment it, you should delete
 % egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
@@ -25,6 +26,8 @@
 
 \newcommand{\q}[1]{\enquote{#1}}
 \newcommand{\Set}[1]{\left\{ #1 \right\}}
+
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
 
 \begin{document}
 
@@ -113,6 +116,21 @@ $$ d(i, j) = \sum_{l=1}^n \left( r_{il} - r_{jl} \right)^2 $$
 We take the $1$-norm:
 
 $$ d(i, j) = \sum_{l=1}^n \left| r_{il} - r_{jl} \right| $$
+
+\subsubsection{Cosine similarity}
+This can be thought as the cosine of the angle between the two vectors of ratings.
+We define
+
+$$ d(i, j) = \frac1{ \norm{\tilde{\mathbf r}_{i\cdot}} 
++ \norm{\tilde{\mathbf r}_{j\cdot}} }
+\sum_{l=1}^n \left( \tilde r_{il} \tilde r_{jl} \right) $$
+
+This metric is sensitive to the exact value (rather than just relative difference);
+a negative value could imply that the user does not like the data.
+Therefore, we propose two mechanisms for rescaling the ratings,
+using $\tilde r_{ij} = r_{ij} - \bar{\mathbf r_{\cdot\cdot}}$
+and $\tilde r_{ij} = r_{ij} - 3$ respectively,
+where $3$ is the standard rating for "neutral".
 
 \subsection{Aggregation of ratings}
 After the $k$ nearest neighbour users have been selected,

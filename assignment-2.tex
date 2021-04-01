@@ -89,7 +89,7 @@ $$ \sigma_i \approx \sqrt{\frac{1}{n} \sum_k (r_{ik} - \mu_i)} ,
 
 Note that the range of the Pearson Correlation Coefficient is $[-1,1]$.
 To make the coefficient satisfy the conditions in~\ref{eq:metric}
-and not have negative values~\cite{Alpher01}, we define $$ d(i, j) = 1 - \rho_{ij} $$
+and not have negative values, we define $$ d(i, j) = 1 - \rho_{ij} $$
 such that $d$ has the range $[0, 2]$.
 A smaller value implies higher similarity between users.
 
@@ -267,7 +267,26 @@ The RMSE of the baseline is $1.2062313640217561$.
 For the naive arithmetic mean, the Euclidean and Taxicab have a better performance than that of baseline but Pearson and Spearman are not in the case.
 
 For the Weighted method, all metrics did not have better performance than that of baseline. One possible reason for this is related to the lack of data for similar users. When most of the similar users did not have a rating of the movie we are predicting, the formula of weighted average may not include enough information and therefore led to less accurate predictions.
-      
+
+\section{Future work}
+We noticed several problems in our design and plan to resolve them in the future weeks.
+
+\subsection{Do not use imputed values for prediction}
+Currently, missing data are imputed using the corresponding mean value of ratings on the same movie.
+These imputed values do not actually represent opinions of similar users,
+and they should not be considered.
+It is proposed that we only aggregate real ratings from neighbours,
+and only fallback to mean rating if all $K$ neighbours did not rate the movie.
+
+\subsection{Top $Q$ optimization}
+Hong and Tsamis proposed only considering the neighbourhood
+that intersects with the users with the top $Q < m$ ratings~\cite{Alpher01}.
+They suggested that this improves performance as
+the distance matrix can be reduced from $O(m^2)$ to $O(Qm)$.
+We noticed that this also reduces the chance of the aforementioned problem
+where a substantial proportion of the top $K$ neighbours did not the movie
+of which a rating is to be predicted.
+
 {\small
 	\bibliographystyle{ieee_fullname}
 	\bibliography{egbib}

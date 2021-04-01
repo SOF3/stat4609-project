@@ -300,9 +300,10 @@ as is reflected by the fact that the former is different by $0.707$
 while the latter is $0.242$.
 
 \subsubsection{Aggregation method}
-It is observed that weighted average performs similarly to or even worse than the unweighted mean.
-
-For the weighted method, all metrics did not have better performance than that of baseline. One possible reason for this is related to the lack of data for similar users. When most of the similar users did not have a rating of the movie we are predicting, the formula of weighted average may not include enough information and therefore led to less accurate predictions.
+It is observed that weighted average performs similarly to or even worse than the unweighted mean,
+except for the case in cosine metric.
+One possible reason is that the neighbourhood users did not review the evaluated movie,
+hence incorrectly giving extra significance to these imputed data.
 
 \section{Future work}
 We noticed several problems in our design and plan to resolve them in the future weeks.

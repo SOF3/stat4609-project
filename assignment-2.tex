@@ -192,7 +192,7 @@ where $E$ is the set of retained evaluation data.
 
 \section{Model performance}
 The following table exhaustively lists our test results.
-The RMSE of the baseline is $1.2062313640217561$.
+The RMSE of the baseline is $1.1977149830409672$.
 
 % \begin{tabular}{|c|c|c|c|}
 % 	\hline
@@ -212,11 +212,11 @@ The RMSE of the baseline is $1.2062313640217561$.
     \hline
     \multicolumn{3}{|c|}{\textbf{Euclidean}}\\
     \hline
-    $k$ & Aggregation function & RMSE\\
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1828937133391502$\\
+    $10$ & Naive arithmetic mean & $1.1743212065844748$\\
     \hline
-    $10$ & Weighted & $1.2347629060607566$\\
+    $10$ & Weighted & $1.174185480169039$\\
     \hline
 \end{tabular}\\
 
@@ -226,11 +226,39 @@ The RMSE of the baseline is $1.2062313640217561$.
     \hline
     \multicolumn{3}{|c|}{\textbf{Taxicab}}\\
     \hline
-    $k$ & Aggregation function & RMSE\\
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1826669333812787$\\
+    $10$ & Naive arithmetic mean & $1.1761011327320081c$\\
     \hline
-    $10$ & Weighted & $1.2359882912097488$\\
+    $10$ & Weighted & $1.1758026291697672$\\
+    \hline
+\end{tabular}\\
+
+\hspace{2em}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Cosine with $3$-corrected ratings}}\\
+    \hline
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.1807121450228732$\\
+    \hline
+    $10$ & Weighted & $1.17781506242924$\\
+    \hline
+\end{tabular}\\
+
+\hspace{2em}
+
+\begin{tabular}{| c | c | c |}
+    \hline
+    \multicolumn{3}{|c|}{\textbf{Cosine with mean-corrected ratings}}\\
+    \hline
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
+    \hline
+    $10$ & Naive arithmetic mean & $1.1064212349492457$\\
+    \hline
+    $10$ & Weighted & $1.0975696560484718$\\
     \hline
 \end{tabular}\\
 
@@ -240,11 +268,11 @@ The RMSE of the baseline is $1.2062313640217561$.
     \hline
     \multicolumn{3}{|c|}{\textbf{Pearson}}\\
     \hline
-    $k$ & Aggregation function & RMSE\\
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.1964910584114306$\\
+    $10$ & Naive arithmetic mean & $1.1977283650557216$\\
     \hline
-    $10$ & Weighted & $1.2076590696961116$\\
+    $10$ & Weighted & $1.1977314956919407$\\
     \hline
 \end{tabular}\\
 
@@ -254,11 +282,11 @@ The RMSE of the baseline is $1.2062313640217561$.
     \hline
     \multicolumn{3}{|c|}{\textbf{Spearman}}\\
     \hline
-    $k$ & Aggregation function & RMSE\\
+		$k$ & \textbf{Aggregation function} & \textbf{RMSE}\\
     \hline
-    $10$ & Naive arithmetic mean & $1.2084831045336266$\\
+    $10$ & Naive arithmetic mean & $1.1981137810682911$\\
     \hline
-    $10$ & Weighted & $1.208482338367309$\\
+    $10$ & Weighted & $1.1981166551209421$\\
     \hline
 \end{tabular}
 
@@ -279,8 +307,8 @@ It is proposed that we only aggregate real ratings from neighbours,
 and only fallback to mean rating if all $K$ neighbours did not rate the movie.
 
 \subsection{Top $Q$ optimization}
-Hong and Tsamis proposed only considering the neighbourhood
-that intersects with the users with the top $Q < m$ ratings~\cite{Alpher01}.
+Hong and Tsamis proposed considering only the neighbourhood that
+intersects with the users with the top $Q < m$ number of ratings~\cite{Alpher01}.
 They suggested that this improves performance as
 the distance matrix can be reduced from $O(m^2)$ to $O(Qm)$.
 We noticed that this also reduces the chance of the aforementioned problem

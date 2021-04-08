@@ -3,3 +3,7 @@
 *.bbl
 *.blg
 *.brf
+*.txt
+*.csv
+*.pyc
+*.npy

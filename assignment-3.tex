@@ -165,7 +165,15 @@ The following table exhaustively lists our test results. Train RMSE and Test RMS
     \hline
 		$k$ & $\alpha$ &  $\lambda$ & Train RMSE & Test RMSE \\
     \hline
-		$100$ & $0.005$ & $0$ & & \\
+		$100$ & $0.005$ & $0$ & $0.41625$ & $1.26925$ \\
+    \hline
+		$100$ & $0.005$ & $0.01$ & $0.40730$ & $1.15628$ \\
+    \hline
+		$50$ & $0.005$ & $0$ & $0.54142$ & $1.08247$ \\
+    \hline
+		$10$ & $0.005$ & $0$ & $0.724214$ & $0.954739$ \\
+    \hline
+		$100$ & $0.01$ & $0$ & $0.27$ & $1.37$ \\
     \hline
 \end{tabular}\\
 
@@ -185,8 +193,54 @@ The following table exhaustively lists our test results. Train RMSE and Test RMS
 
 \hspace{10em}
 
+The significantly higher RMSE is most likely because of lack of cooresponding data for the movie due to a truncated dataset.
+It is expected that the test RMSE shall increase significantly as we switch to a larger training dataset in the future.
 
-      
+It is also worth noting from models 3 and 4 that,
+although the training RMSE is much higher than the previous models,
+they have much lower test RMSE than the others.
+In particular, the fourth model is the first one to achieve test RMSE below $1$.
+It is hence concluded that reducing rank is very helpful in preventing overfitting the model.
+This is also reasonably justified by the fact that
+matrix factorization is otherwise just a meaningless copy of the original matrix
+if the reduced rank is comparable to the original size ($10/50/100$ vs $1000$ vs $10000$ in this case).
+
+In contrast, setting a higher learning rate $\alpha = 0.01$ as in model 5
+has achieved the lowest train RMSE of all models,
+but also the highest test RMSE.
+This reflects that the SVD model is very vulnerable to overfitting.
+
+\begin{figure}
+	\caption{RMSE plot for the first model}
+	\includegraphics[width=0.5\textwidth]{./svd1.png}
+\end{figure}
+
+\begin{figure}
+	\caption{RMSE plot for the second model ($\lambda=0.01$)}
+	\includegraphics[width=0.5\textwidth]{./svd2.png}
+\end{figure}
+
+\begin{figure}
+	\caption{RMSE plot for the third model ($k=50$)}
+	\includegraphics[width=0.5\textwidth]{./svd3.png}
+\end{figure}
+
+\begin{figure}
+	\caption{RMSE plot for the fourth model ($k=10$)}
+	\includegraphics[width=0.5\textwidth]{./svd4.png}
+\end{figure}
+
+\begin{figure}
+	\caption{RMSE plot for the fifth model ($\alpha=0.01$)}
+	\includegraphics[width=0.5\textwidth]{./svd5.png}
+\end{figure}
+
+\subsection{Further enhancement}
+We plan to split the bias terms $b_u$ and $c_i$ into terms binned by weekday or day-of-year,
+i.e. $b_{u,t}, c_{i,t}$.
+This allows the model to take into account effects of time on user ratings.
+BigChaos~\cite{BigChaos2008} noted that this approach is helpful in offsetting long-term (probably emotional) drift of the user over time.
+
 {\small
 	\bibliographystyle{ieee_fullname}
 	\bibliography{egbib}

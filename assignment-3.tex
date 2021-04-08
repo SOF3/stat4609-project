@@ -62,7 +62,7 @@ It aims to learn the latent preferences of users and the latent factors of movie
 \subsection{SVD with matrix factorization}
 
 It is in fact the another form of matrix factorization:
-$$R = Q\sumP^{T}$$
+$$R = Q \sum P^{T}$$
 
 We are able to truncate it into low rank $k$ to approximately factorize as:
 $$R \approx Q_k \sum_k P_k^T$$
@@ -91,7 +91,7 @@ To estimate the target ratings,we apply the following formula:
 $$ \hat{r_{u,i}} = \bar{r}+b_u + c_i + \sum_{f=1}^F (P_{u,f} \cdot Q_{i,f}) $$
 We decided to use the global average for $\bar{r}$ by
 $$\bar{r} = \frac{1}{N} \sum^{N}_{i=1} K_i$$
-where K refers to the provided rating data.
+where $K$ refers to the provided rating data.
 
 Let us denote the prediction error $e_{ui}$ = $r_{ui} - \hat{r_{ui}}$,
 Each biases and latent factors on known rating are the following:
@@ -109,19 +109,27 @@ Therefore, only a subset of data is used for evaluation.
 To be specific, only first $10000$ movies and first $1000$ users that appear in the data set are considered.
 
 \subsection{Data preprocessing}
-The first 1000 movies are loaded into a numpy array with columns of Movie ID, User ID and Rating.
+The first 10000 movies are loaded into a numpy array with columns of Movie ID, User ID and Rating.
 The movie IDs and user IDs are reordered from 0 for the ease of indexing.
 Approximately $80\%$ data are then reformatted into a rating matrix $R \in \mathbb R^{m \times n}$ for training,
 where $r_{ij}$ is the rating of user $i$ on movie $j$;
 the rest are retained for performance evaluation.
 The missing data are being skipped in our model.
 
+In general, our algorithm runs through all rows for $\epsilon+1$ times
+where $\epsilon$ is the number of epochs of gradient descent.
+The model involves 5 parameters,
+namely $\mu \in \mathbb R, \mathbf b \in \mathbb R^m, \mathbf c \in \mathbb R^n, P \in \mathbb R^{mk}, Q \in \mathbb R^{nk}$.
+The blocking term is $nk$, so this model is scalable to the full dataset given that $nk$ is not beyond memory limit.
+We have not used the full model in this assignment due to time constraints,
+but we will do so in the final report.
+
 \subsection{Hyperparameters selection}
 In this SVD model, there are four hyperparameters to be selected, namely
 \begin{itemize}
 	\item Learning Rate ($\alpha$)
 	\item Regularization ($\lambda$)
-	\item Number of rank ($k$)
+	\item Rank of factorization ($k$)
 	\item Number of epoch
 \end{itemize}
 
@@ -133,18 +141,17 @@ Rate with too small value may cause a long training time while a large value may
 \subsubsection{Regularization ($\lambda$)}
 Regularization plays a crucial role in preventing the overfitting issue when training model. It aims to reduce the complexity of model to achieve its function. When the regularization parameter is large, the decay in weights during SGD update will be increased and therefore the weights of the hidden units will be negligible (close to zero).
 
-If it sets to be too large, a large number of hidden units will be omitted and the network will loss its function. If it sets to be too small, the network will be too complex and hence will increase the possibility of being overfitted.
+If it is set to be too large, each change to the parameters are cancelled by the regularization term. If it is set to be too small, overfitting may result.
 
-\subsubsection{Number of rank  ($k$)}
-Intuitively, it represents the classification of the user-movie data. In each category classified, the user U rating on movie A will also be grouped with the movie B when both movie A and movie B are considered as similar items (even when no record on the user U on movie B).
+\subsubsection{Rank of factorization ($k$)}
+Intuitively, each rank represents some characteristic of a user or a movie. Users and movies that interact strongly on a rank would be affected.
 
-With a large value of it, we believe that the probability of having overfitting issue will be increased whereas the accuracy will drop with a low value on the number of rank.
+A large value of $k$ increases the training time, memory consumption and probably the chance of overfitting,
+while a low value of $k$ reduces the representativeness of the model and hence reduced accuracy.
 
 \subsubsection{Number of epoch}
-The number of epochs defines the number times that the modal will work through the whole training dataset. 
-
-Generally, we need to consider how the validation loss is behaving after each epoch. If the validation loss increases, it may be a sign of overfitting.
-The extremely high value of it will result in a long training time which harms its performance but may benefits the training process since it has more cycle of it. However,its effect on the model performance is not as significant as other parameters and we will not include it in the next section to present our model performance.
+The number of epochs defines the number of times that the modal will work through the whole training dataset.
+Since we already report the training score for each epoch, it is adjusted to a value such that the training score appears to converge negligibly.
 
 \subsection{Predictive test set score (RMSE)}
 The model is evaluated by computing the RMSE between predicted and actual rating values:
@@ -154,19 +161,11 @@ where $E$ is the set of retained evaluation data.
 \section{Model performance}
 The following table exhaustively lists our test results. Train RMSE and Test RMSE refer to the RMSE value calculated for the training dataset and testing dataset respectively.
 
-rank=100
-epoch = 0.2346
-rank=50
-epoch = 0.368
-
 \begin{tabular}{| c | c | c | c | c |}
-
     \hline
-    $k$ & $\alpha$ &  $\lambda$ & Train RMSE &  TestRMSE\\
+		$k$ & $\alpha$ &  $\lambda$ & Train RMSE & Test RMSE \\
     \hline
-    $10$ & $1.234$ & $1.234$ & $1.234$ & $1.234$ \\
-    \hline
-    $10$ &  $1.234$& $1.234$ & $1.234$ & $1.234$\\
+		$100$ & $0.005$ & $0$ & & \\
     \hline
 \end{tabular}\\
 

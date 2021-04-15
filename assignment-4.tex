@@ -233,40 +233,46 @@ where $E$ is the set of retained evaluation data.
 \section{Model performance}
 The following table exhaustively lists our test results. Train RMSE and Test RMSE refer to the RMSE value calculated for the training dataset and testing dataset respectively.
 
-100,40
-Epoch 39, mse = 0.8843765864636746
-Test RMSE: 1.0292723480987729
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+	\hline
+	No. & $k$ & $\alpha$ & $\gamma$ & $N$ & Epochs & Train RMSE & Test RMSE
+	\\ \hline
+	1 & $100$ & $1$ & $0.7$ & $65535$ & $9$ & $1.16384$ & $1.08611$
+	\\ \hline
+	2 & $300$ & $1$ & $0.7$ & $65535$ & $9$ & $1.16491$ & $1.08696$
+	\\ \hline
+	3 & $100$ & $0.1$ & $0.9$ & $65535$ & $9$ & $1.16536$ & $1.08816$
+	\\ \hline
+	4 & $100$ & $1$ & $0.7$ & $4096$ & $9$ & $1.16368$ & $1.08977$
+	\\ \hline
+	5 & $100$ & $1$ & $0.7$ & $1048576$ & $8$ & $5.14467$ & $2.23113$
+	\\ \hline
+\end{tabular}
 
-\begin{figure}[h]
-	\includegraphics[width=0.5\textwidth]{./100_40_graph.PNG}
-	\caption{RMSE graph for rank =100 and epochs = 40}
+
+\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{screenshot20210415234153.png}
+	\caption{RMSE graph for model 1}
 \end{figure}
 
-200,40
-Epoch 39, mse = 0.8379997956340094
-Test RMSE: 1.062824159761129
-
-\begin{figure}[h]
-	\includegraphics[width=0.5\textwidth]{./200_40_graph.PNG}
-	\caption{RMSE graph for rank =200 and epochs = 40}
+\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{screenshot20210415234346.png}
+	\caption{RMSE graph for model 2}
 \end{figure}
 
-50,40
-Epoch 39, mse = 0.9447392710872188
-Test RMSE: 1.0427012386780807
-
-\begin{figure}[h]
-	\includegraphics[width=0.5\textwidth]{./50_40_graph.PNG}
-	\caption{RMSE graph for rank = 50 and epochs = 40}
+\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{screenshot20210415234450.png}
+	\caption{RMSE graph for model 3}
 \end{figure}
 
-100,60
-Epoch 59, mse = 0.9101701523855344
-Test RMSE: 1.188729648171058
+\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{screenshot20210415234538.png}
+	\caption{RMSE graph for model 4}
+\end{figure}
 
-\begin{figure}[h]
-	\includegraphics[width=0.5\textwidth]{./100_60_graph.PNG}
-	\caption{RMSE graph for rank = 100 and epochs = 60}
+\begin{figure}[!htbp]
+	\includegraphics[width=0.3\textwidth]{screenshot20210415234604.png}
+	\caption{RMSE graph for model 5}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -168,12 +168,6 @@ There are two hyperparameters, namely
     \item $\gamma$
 \end{itemize}
 
-\subsubsection{Step size}
-tbc
-
-\subsubsection{$\gamma$}
-tbc
-
 \subsection{Hyperparameters selection for model}
 In this MLP model, there are five hyperparameters to be selected, namely
 \begin{itemize}
@@ -221,6 +215,7 @@ $$ \text{RMSE} = \sqrt{\sum_{(i, j) \in E} \frac{{(\hat r_{ij} - r_{ij})}^2}{\le
 where $E$ is the set of retained evaluation data.
 
 \section{Model performance}
+\subsection{Findings}
 The following table exhaustively lists our test results. Train RMSE and Test RMSE refer to the RMSE value calculated for the training dataset and testing dataset respectively.
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
@@ -240,96 +235,37 @@ The following table exhaustively lists our test results. Train RMSE and Test RMS
 \end{tabular}
 
 
-\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{screenshot20210415234153.png}
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210415234153.png}
 	\caption{RMSE graph for model 1}
 \end{figure}
 
-\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{screenshot20210415234346.png}
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210415234346.png}
 	\caption{RMSE graph for model 2}
 \end{figure}
 
-\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{screenshot20210415234450.png}
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210415234450.png}
 	\caption{RMSE graph for model 3}
 \end{figure}
 
-\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{screenshot20210415234538.png}
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210415234538.png}
 	\caption{RMSE graph for model 4}
 \end{figure}
 
-\begin{figure}[!htbp]
-	\includegraphics[width=0.3\textwidth]{screenshot20210415234604.png}
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210415234604.png}
 	\caption{RMSE graph for model 5}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Reference:
-% learning rate| regularization (\lamba)| Rank of factorization (k)|Number of epoch (x)| Batch size (N)
-% $\lambda$ & $k$ &  $\lambda$ & Train RMSE & Test RMSE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{tabular}{| c | c | c | c | c | c |}
-%     \hline
-% 	$\lambda$ & $k$ &  $x$ & $N$ & Train RMSE & Test RMSE\\
-%     \hline
-% 		$100$ & $0.005$ & $0$ & $0$ & $0.41625$ & $1.26925$ \\
-%     \hline
-% 		$100$ & $0.005$ & $0.01$ & $0$ & $0.40730$ & $1.15628$ \\
-%     \hline
-% 		$50$ & $0.005$ & $0$ & $0$ & $0.54142$ & $1.08247$ \\
-%     \hline
-% 		$10$ & $0.005$ & $0$ & $0$ & $0.724214$ & $0.954739$ \\
-%     \hline
-% 		$100$ & $0.01$ & $0$ & $0$ & $0.27$ & $1.37$ \\
-%     \hline
-% \end{tabular}\\
-
-\hspace{2em}
-
-% \begin{tabular}{| c | c | c |}
-%     \hline
-%     \multicolumn{3}{|c|}{\textbf{Spearman}}\\
-%     \hline
-%     $k$ & Aggregation function & RMSE\\
-%     \hline
-%     $10$ & Naive arithmetic mean & $1.2084831045336266$\\
-%     \hline
-%     $10$ & Weighted & $1.208482338367309$\\
-%     \hline
-% \end{tabular}
-
 \hspace{10em}
 
-% The significantly higher RMSE is most likely because of lack of cooresponding data for the movie due to a truncated dataset.
-% It is expected that the test RMSE shall increase significantly as we switch to a larger training dataset in the future.
+\subsection{Discussion}
+When comparing the results of tuning the value of rank from 100 to 300, we can see the RMSE curves have a similar shape in general. After epoch 0, both MSE values drop significantly by around 4.5 units and then the values remain constant. The shape becomes smoother than previous results by tuning learning rate to 0.1 and $\gamma$ to 0.9. The curve of decreasing the batch size to 4096 has a similar shape with the first and second one but the extent of drop is much smaller (by 0.3). By increasing the batch size to 1048576, the RMSE drops constantly (remains a straight line) from $\text{mse} = 13.17$ to $\text{mse} = 5.144$.
 
-% It is also worth noting from models 3 and 4 that,
-% although the training RMSE is much higher than the previous models,
-% they have much lower test RMSE than the others.
-% In particular, the fourth model is the first one to achieve test RMSE below $1$.
-% It is hence concluded that reducing rank is very helpful in preventing overfitting the model.
-% This is also reasonably justified by the fact that
-% matrix factorization is otherwise just a meaningless copy of the original matrix
-% if the reduced rank is comparable to the original size ($10/50/100$ vs $1000$ vs $10000$ in this case).
-
-% In contrast, setting a higher learning rate $\alpha = 0.01$ as in model 5
-% has achieved the lowest train RMSE of all models,
-% but also the highest test RMSE.
-% This reflects that the SVD model is very vulnerable to overfitting.
-
-% \begin{figure}
-% 	\caption{RMSE plot for the first model}
-% 	\includegraphics[width=0.5\textwidth]{./svd1.png}
-% \end{figure}
-
-
-% \subsection{Further enhancement}
-% We plan to split the bias terms $b_u$ and $c_i$ into terms binned by weekday or day-of-year,
-% i.e. $b_{u,t}, c_{i,t}$.
-% This allows the model to take into account effects of time on user ratings.
-% BigChaos~\cite{BigChaos2008} noted that this approach is helpful in offsetting long-term (probably emotional) drift of the user over time.
+Overall, the first one with (rank = 100, learning rate = 1.0, gamma = 0.7, batch size = 65535) has the lowest mse (mse = 1.163) after training. The highest belongs to the (rank = 100; learning rate = 1.0, gamma = 0.7, batch size = 1048576)
 
 {\small
 	\bibliographystyle{ieee_fullname}

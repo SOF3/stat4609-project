@@ -62,13 +62,13 @@
 
 Among all collaborative filtering techniques, matrix factorization (MF) become a standard approach to the model-based recommendation. Many research teams have put their efforts on enhancing it to break the accuracy record. 
 
-However, it has several limitations such as the cold-start problem -- how the system provide recommendations to new users, how to recommend when new item is added without feature vector or embedding \cite{FMF}. Also, the use of dot product for recommending popular items will lead to the tendency of recommending popular items to those users without specific user interests. With the use of inner product of User and item feature embeddings, MF limits the capture of the complex relations  of the users and items interactions \cite{NeuralCF}.
+However, it has several limitations such as the cold-start problem -- how the system provide recommendations to new users, how to recommend when new item is added without feature vector or embedding \cite{FMF}. Also, the use of dot product for recommending popular items will lead to the tendency of recommending popular items to those users without specific user interests. With the use of inner product of User and item feature embeddings, MF limits the capture of the complex relations  of the users and items interactions \cite{he2017neural}.
 
-In this assignment, we aim to implement the new approach, Neural Collaborative Filtering (NCF), proposed by He team in 2017 \cite{NeuralCF}. They suggested that their design of deep neural network can overcome the limitation of MF.
+In this assignment, we aim to implement the new approach, Neural Collaborative Filtering (NCF), proposed by He team in 2017 \cite{he2017neural}. They suggested that their design of deep neural network can overcome the limitation of MF.
 
 \section{Neural Collaborative Filtering (NCF) model}
 
-This is the model proposed by He team in 2017 \cite{NeuralCF}. Their proposed model uses a combination of matrix factorization and multi-layer perceptron techniques, and the hidden layers from the two techniques are combined by a fully-connected layer. However, their paper mainly focuses on the prediction of \textit{implicit user feedback}, that is, they are predicting the values of $y_{ui}$ where $y_{ui}=1$ when the obervation (user $u$, item $i$) is observed, and $0$ when the
+This is the model proposed by He team in 2017 \cite{he2017neural}. Their proposed model uses a combination of matrix factorization and multi-layer perceptron techniques, and the hidden layers from the two techniques are combined by a fully-connected layer. However, their paper mainly focuses on the prediction of \textit{implicit user feedback}, that is, they are predicting the values of $y_{ui}$ where $y_{ui}=1$ when the obervation (user $u$, item $i$) is observed, and $0$ when the
 observation (user $u$, item $i$) is not observed. Thus, at the final stage of their proposed model, the output of the fully-connected layer is passed into a sigmoid function, such that the model only outputs values within $[0, 1]$. 
 
 The problem of predicting implicit feedback is different from the problem we wish to solve in the Netflix dataset, because in the Netflix problem we wish to predict actual ratings from $[1, 5]$.
@@ -79,7 +79,7 @@ The model proposed by He is split into 3 parts - Generalized Matrix Factorizatio
 
 \begin{figure}[h]
 	\includegraphics[width=0.5\textwidth]{./NeuCF.PNG}
-	\caption{Neural Collaborative Filtering Model Design \cite{NeuralCF}}
+	\caption{Neural Collaborative Filtering Model Design \cite{he2017neural}}
 \end{figure}
 
 \subsection{Model - Input Layer}

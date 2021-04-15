@@ -74,7 +74,7 @@ This model adopts the multi-layer perceptron (MLP) to model the user-item intera
 
 \begin{figure}[h]
 	\includegraphics[width=0.5\textwidth]{./NCF-network.PNG}
-	\caption{Neural Collaborative Filtering Model Design}
+	\caption{Neural Collaborative Filtering Model Design \cite{NeuralCF}}
 \end{figure}
 
 We take two vectors from user and item respectively in the input layer and then they will be embedded to pass the neural collaborative filtering (neural CF) layers. In our neural CF layers, we first do matrix multiplication. The product then passes into the rectified linear unit (ReLU) and next passes through an activation function $f1(x)$.
@@ -129,6 +129,9 @@ The mapping functions are as follow:
     \item $\phi_x$ the mapping function for the xth neural CF layer. X is the number of the layers
 \end{itemize}
 
+% \subsection{Neural Network Model}
+
+
 \section{Technical Details}
 The training data set provided by Netflix consists of more than 100 million ratings with 17770 movies and 480189 users.
 % Such a huge data set would consume a significant amount of training time and memory
@@ -157,15 +160,30 @@ The movies are loaded into a list with columns of Movie ID, User ID and Rating. 
 
 \subsection{Optimization and scheduler}
 We select Adadelta as our optimizer. 
-To have a better performance on the converge of loss function, we implement a scheduler with step size = 1 and $\gamma$ = 0.7.
+% To have a better performance on the converge of loss function, we implement a scheduler with step size = 1 and $\gamma$ = 0.7.
 
-\subsection{Hyperparameters selection}
-In this MLP model, there are four hyperparameters to be selected, namely
+To have a better performance on the converge of loss function,we implement a scheduler with different combinations of hyperparameters of scheduler
+\subsection{Hyperparameters selection for scheduler}
+There are two hyperparameters, namely
+\begin{itemize}
+    \item step size
+    \item $\gamma$
+\end{itemize}
+
+\subsubsection{Step size}
+tbc
+
+\subsubsection{$\gamma$}
+tbc
+
+\subsection{Hyperparameters selection for model}
+In this MLP model, there are five hyperparameters to be selected, namely
 \begin{itemize}
 	\item Learning Rate ($\alpha$)
 	\item Regularization ($\lambda$)
 	\item Rank of factorization ($k$)
 	\item Number of epoch ($x$)
+	\item Batch Size ($N$)
 % 	\item Log Interval ($t$)
 \end{itemize}
 
@@ -192,6 +210,12 @@ Since we already report the training score for each epoch, it is adjusted to a v
 
 % \subsubsection{Log-interval ($t$)}
 
+\subsubsection{Batch size ($N$)}
+The batch size defines the number of samples to be passed through before the update of model parameters.
+
+The small batch size usually can give a better performance since the model can start learning with a small subset and have more cycles to improve.
+
+However, the smaller batch size costs the slower learning and hence more training time.
 
 \subsection{Predictive test set score (RMSE)}
 The model is evaluated by computing the RMSE between predicted and actual rating values:
@@ -237,19 +261,24 @@ Test RMSE: 1.188729648171058
 	\caption{RMSE graph for rank = 100 and epochs = 60}
 \end{figure}
 
-% \begin{tabular}{| c | c | c | c | c |}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Reference:
+% learning rate| regularization (\lamba)| Rank of factorization (k)|Number of epoch (x)| Batch size (N)
+% $\lambda$ & $k$ &  $\lambda$ & Train RMSE & Test RMSE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{tabular}{| c | c | c | c | c | c |}
 %     \hline
-% 		$k$ & $\alpha$ &  $\lambda$ & Train RMSE & Test RMSE \\
+% 	$\lambda$ & $k$ &  $x$ & $N$ & Train RMSE & Test RMSE\\
 %     \hline
-% 		$100$ & $0.005$ & $0$ & $0.41625$ & $1.26925$ \\
+% 		$100$ & $0.005$ & $0$ & $0$ & $0.41625$ & $1.26925$ \\
 %     \hline
-% 		$100$ & $0.005$ & $0.01$ & $0.40730$ & $1.15628$ \\
+% 		$100$ & $0.005$ & $0.01$ & $0$ & $0.40730$ & $1.15628$ \\
 %     \hline
-% 		$50$ & $0.005$ & $0$ & $0.54142$ & $1.08247$ \\
+% 		$50$ & $0.005$ & $0$ & $0$ & $0.54142$ & $1.08247$ \\
 %     \hline
-% 		$10$ & $0.005$ & $0$ & $0.724214$ & $0.954739$ \\
+% 		$10$ & $0.005$ & $0$ & $0$ & $0.724214$ & $0.954739$ \\
 %     \hline
-% 		$100$ & $0.01$ & $0$ & $0.27$ & $1.37$ \\
+% 		$100$ & $0.01$ & $0$ & $0$ & $0.27$ & $1.37$ \\
 %     \hline
 % \end{tabular}\\
 

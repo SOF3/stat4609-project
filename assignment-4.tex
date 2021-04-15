@@ -82,41 +82,34 @@ The model proposed by He is split into 3 parts - Generalized Matrix Factorizatio
 	\caption{Neural Collaborative Filtering Model Design \cite{NeuralCF}}
 \end{figure}
 
-\
+\subsection{Model - Input Layer}
 
-This model adopts the multi-layer perceptron (MLP) to model the user-item interaction $y_{ij}$.
-We take two vectors from user and item respectively in the input layer and then they will be embedded to pass the neural collaborative filtering (neural CF) layers. In our neural CF layers, we first do matrix multiplication. The product then passes into the rectified linear unit (ReLU) and next passes through an activation function $f1(x)$.
+The input of the model are the user ID and item ID transformed to a binarized vector with one-hot encoding.
 
-% \subsubsection{Model - Input Layer}
+\subsection{Model - Embedding Layer}
 
-This model takes two sparse feature vectors from representation of users and items respectively. 
+For each user and each movie, we train two sets of embedding latent vectors. This is because one set of latent
+vectors will be passed into the itemwise multiplication part
+of the model (in He’s paper, it is called Generalized Matrix
+Factorization (GMF)), and the other set of latent vectors will
+be passed into the neural network part of the model (in He’s
+paper, it is called Multi-Layer Perceptron (MLP)).
 
-\begin{itemize}
-	\item User vector:$v_i$ with m users 
-	\item Item vector:$v_j$ with n items.
+\subsection{Model - Generalized Matrix Factorization (GMF)}
 
-\end{itemize}
-The identity of users and item will be transformed to a binarized vector with one-hot encoding. 
+In this part of the model, the user latent vector and item latent vector are combined via itemwise multiplication, similar to that in the SVD matrix factorization model. The output of this part is another vector with the same size at the latent vectors and is passed on to the final output layer of the model.
 
-With such generic feature representation, the model can handle various modelling types such as content-based and neighbor-based. The limitation of the cold-start problem can be solved by using the content features to represent users and items.
+\subsection{Model - Multi-Layer Perceptron (MLP)}
 
-% \subsubsection{Model - Embedding Layer}
+In this part of the model, the user latent vector and item latent vector are first concatenated. Afterwards, the whole concatenated vector is passed through several layers of fully connected hidden linear layers, using the ReLU activation function. the output of this part is a vector dependng on the output size of the last hidden layer and is passed on to the final output layer of the model.
 
-After the input layer, the next is the embedding layer. It is fully connected to project the sparse vector representations ($v_i$ and $v_j$) for users and items in the input layer into dense vectors.It can also be seen as the latent vector matrix, $P$ for users and $Q$ for items, in the context of latent factor model.
+\subsection{Model - Output Layer}
 
+The final output layer takes in the vectors produced by the GMF and MLP parts of the model and concatenates them. The output of this part, which is the final output of the whole model, is a weighted sum of the vector elements, where the weights are model parameters to be learned. The final output layer produces a predicted score $\hat{y_{ui}}$.
 
-% \subsubsection{Model - Neural Collaborative Filtering Layer}
-The obtained latent vectors from the embedding layers will then be fed into the the neural CF layers,and be mapped to predicted probability scores by mapping fuction $\phi_X$. Those layers will get the complex user-item relations from the vectors.
-
-% \subsubsection{Model - Output Layer}
-
-The final output layer produces a predicted score $\hat{y_{ij}}$, which is the predicted user-items interactions of $y_{ij}$ through the mapping function $\phi_{output}$.
-
-
-
-% \subsubsection{Model - Formula}
+\subsection{Model - Formula}
 \bigskip
-\textbf{ The formula of the NCF is as follow:}
+\textbf{ The formula of the GMF is as follow:}
 $$\hat{y_{ij}} = f(P^T v_i Q^T v_j|P,Q,\Theta_f)$$
 
 The variables with m users and n items are denoting as:
@@ -128,17 +121,14 @@ The variables with m users and n items are denoting as:
 \end{itemize}
 
 \bigskip
-\textbf{ For interaction function $f$, it can be formulated:}
+\textbf{ For MLP $f$, it can be formulated as:}
 $$f(P^T v_i, Q^T v_j) = \phi_{output}(\phi_X(...\phi_2(\phi_1(P^T v_i, Q^T v_j))...))$$
 
 The mapping functions are as follow:
 \begin{itemize}
     \item $\phi_{output}$: the mapping function for output layer
-    \item $\phi_x$ the mapping function for the xth neural CF layer. X is the number of the layers
+    \item $\phi_x$ the activation function for the xth hidden neural FC layer. $x$ is the number of the layers
 \end{itemize}
-
-% \subsection{Neural Network Model}
-
 
 \section{Technical Details}
 The training data set provided by Netflix consists of more than 100 million ratings with 17770 movies and 480189 users.

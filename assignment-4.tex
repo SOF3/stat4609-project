@@ -66,17 +66,25 @@ However, it has several limitations such as the cold-start problem -- how the sy
 
 In this assignment, we aim to implement the new approach, Neural Collaborative Filtering (NCF), proposed by He team in 2017 \cite{NeuralCF}. They suggested that their design of deep neural network can overcome the limitation of MF.
 
-\subsection{Neural Network Model}
+\section{Neural Collaborative Filtering (NCF) model}
 
-This model adopts the multi-layer perceptron (MLP) to model the user-item interaction $y_{ij}$. 
+This is the model proposed by He team in 2017 \cite{NeuralCF}. Their proposed model uses a combination of matrix factorization and multi-layer perceptron techniques, and the hidden layers from the two techniques are combined by a fully-connected layer. However, their paper mainly focuses on the prediction of \textit{implicit user feedback}, that is, they are predicting the values of $y_{ui}$ where $y_{ui}=1$ when the obervation (user $u$, item $i$) is observed, and $0$ when the
+observation (user $u$, item $i$) is not observed. Thus, at the final stage of their proposed model, the output of the fully-connected layer is passed into a sigmoid function, such that the model only outputs values within $[0, 1]$. 
 
-\linebreak
+The problem of predicting implicit feedback is different from the problem we wish to solve in the Netflix dataset, because in the Netflix problem we wish to predict actual ratings from $[1, 5]$.
+Nevertheless, we still think that He's paper provides a good starting point - We modify He's model by removing the final sigmoid function and changing the loss functions used directly, such that the neural network solves a regression problem instead of the original binary
+classification problem.
+
+The model proposed by He is split into 3 parts - Generalized Matrix Factorization, Multi-Layer Perceptron, and Neural matrix factorization. In fact, the third part is a combination of the previous two parts. For this part of our project, we will follow the same workflow as He and implement the 3 parts separately. 
 
 \begin{figure}[h]
-	\includegraphics[width=0.5\textwidth]{./NCF-network.PNG}
+	\includegraphics[width=0.5\textwidth]{./NeuCF.PNG}
 	\caption{Neural Collaborative Filtering Model Design \cite{NeuralCF}}
 \end{figure}
 
+\
+
+This model adopts the multi-layer perceptron (MLP) to model the user-item interaction $y_{ij}$.
 We take two vectors from user and item respectively in the input layer and then they will be embedded to pass the neural collaborative filtering (neural CF) layers. In our neural CF layers, we first do matrix multiplication. The product then passes into the rectified linear unit (ReLU) and next passes through an activation function $f1(x)$.
 
 % \subsubsection{Model - Input Layer}

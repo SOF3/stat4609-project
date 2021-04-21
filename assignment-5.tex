@@ -1,0 +1,87 @@
+% This version of CVPR template is provided by Ming-Ming Cheng.
+% Please leave an issue if you found a bug:
+% https://github.com/MCG-NKU/CVPR_Template.
+
+\documentclass[final]{cvpr}
+
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Include other packages here, before hyperref.
+\usepackage{acro}
+\usepackage{csquotes}
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
+
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\confYear{2021}
+%\setcounter{page}{4321} % For final version only
+
+\newcommand{\q}[1]{\enquote{#1}}
+
+\newcommand{\acdef}[2]{
+	\DeclareAcronym{#1}{
+		short = #1,
+		long = #2,
+	}
+}
+\input{./acronyms}
+
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{
+	Assignment 5 \\~\\
+	\large{Team name: M2 Robo}
+}
+
+\author{
+	Lee Chun Yin\\
+	3035469140\\
+	\and
+	Chiu Yu Ying\\
+	3035477630
+	\and
+	Chan Kwan Yin\\
+	3035466978 \\
+	Team leader
+}
+
+\maketitle
+
+\clearpage
+
+\section{Introduction}
+The Netflix dataset contains 100480507 rows of data,
+each containing the user ID, the movie ID, the rating value (number of stars from 1 to 5)
+and the date that the rating was given.
+The ratings are given in the years 1999-2005.
+from 480189 users on 17770 movies.
+
+The goal of the project is to predict the rating value based on the other fields.
+This is achieved by identifying user interests and movie characteristics based on their ratings,
+and comparing these information against the user and movie under prediction.
+This technique is known as \ac{CF}.
+
+To evaluate performance, 1425333 (about 1.4\% of all data) are selected as the "probe" data.
+We predict the user ratings on the probe data and compare their \ac{RMSE} from the provided data.
+
+In this project, we compare three different models, namely
+\ac{KNN}, \ac{SVD}++ and \ac{NCF}.
+
+\section{Conclusion}
+
+% TODO: uncomment this when we have citations
+% {\small
+	% \bibliographystyle{ieee_fullname}
+	% \bibliography{egbib}
+% }
+
+\end{document}

@@ -59,29 +59,55 @@
 \clearpage
 
 \section{Introduction}
-The Netflix dataset contains 100480507 rows of data,
-each containing the user ID, the movie ID, the rating value (number of stars from 1 to 5)
-and the date that the rating was given.
-The ratings are given in the years 1999-2005.
-from 480189 users on 17770 movies.
+\subsection{\ac{CF}}
+\ac{CF} is a technique for recommendation system,
+in which historical feedback data are used to infer connections between users and products \cite{FactorMeet}.
+While additional features can be introduced to offset certain bias effects \cite{BellKor2008},
+two inputs (user and product) and one output (user rating on the product) are generally sufficient
+to train a \ac{CF} model without involving domain-specific data.
 
-The goal of the project is to predict the rating value based on the other fields.
-This is achieved by identifying user interests and movie characteristics based on their ratings,
-and comparing these information against the user and movie under prediction.
-This technique is known as \ac{CF}.
+Two major approaches for \ac{CF} include neighbourhood models and latent factor models.
+Neighbourhood models compare the similarity between users
+and recommend products positively rated by similar users,
+while latent factor models perform dimensional reduction on both users and movies
+to a common, smaller set of feature attributes such that
+users are recommended with movies of more coherent features.
 
-To evaluate performance, 1425333 (about 1.4\% of all data) are selected as the "probe" data.
-We predict the user ratings on the probe data and compare their \ac{RMSE} from the provided data.
+\subsection{The Netflix Prize dataset}
+The Netflix Prize is a competition for the prediction of users' favour of movies.
+The dataset provides existing ratings of users on given movies,
+and models are trained to predict new ratings.
 
-In this project, we compare three different models, namely
-\ac{KNN}, \ac{SVD}++ and \ac{NCF}.
+The dataset contains 100480507 rows of data structured in the following format:
+
+\begin{tabular}{c|c|c|c}
+	\hline
+	User ID & Movie ID & Rating & Date \\ \hline
+	490189 discrete values & 17770 discrete values & 1, 2, 3, 4, 5 & dates from 1999 to 2005 \\ \hline
+\end{tabular}
+
+To evaluate performance, 1425333 rows (about 1.42\% of all data) are speified as the standard "probe".
+We perform analysis in the following procedure:
+
+\begin{enumerate}
+	\item Train the model with the 99055174 non-probe rows.
+	\item Predict user ratings with the 1425333 probe rows.
+	\item Compute the \ac{RMSE} between the predicted data and actual data.
+\end{enumerate}
+
+In this project, we evaluate three models, namely:
+
+\begin{itemize}
+	\item \ac{KNN}, a simple neighbourhood model
+	\item \ac{SVD}, a latent factor model that accounts for user bias
+	\item \ac{NCF}, a latent factor model that represents features with neural network weights
+\end{itemize}
 
 \section{Conclusion}
 
-% TODO: uncomment this when we have citations
-% {\small
-	% \bibliographystyle{ieee_fullname}
-	% \bibliography{egbib}
-% }
+{\small
+	\bibliographystyle{ieee_fullname}
+	\bibliography{egbib}
+}
 
 \end{document}

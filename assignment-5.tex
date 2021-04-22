@@ -61,8 +61,8 @@
 \section{Introduction}
 \subsection{\ac{CF}}
 \ac{CF} is a technique for recommendation system,
-in which historical feedback data are used to infer connections between users and products \cite{FactorMeet}.
-While additional features can be introduced to offset certain bias effects \cite{BellKor2008},
+in which historical feedback data are used to infer connections between users and products~\cite{FactorMeet}.
+While additional features can be introduced to offset certain bias effects~\cite{BellKor2008},
 two inputs (user and product) and one output (user rating on the product) are generally sufficient
 to train a \ac{CF} model without involving domain-specific data.
 
@@ -140,14 +140,42 @@ In this project, we evaluate three models, namely:
 	\item \ac{NCF}, a latent factor model that represents features with neural network weights
 \end{itemize}
 
+Originally, we proposed three models KNN, SVD and SVD++ (a SVD model with time features).
+Due to the high similarity between SVD and SVD++,
+we proposed the use of NCF instead,
+while the additional time effect bias in SVD++ is left out as a to-do.
+
 \section{Conclusion}
 
 \subsection{\ac{KNN} model}
-In the KNN recommendation system, we discover that the result using cosine with mean-corrected ratings has the best performance among all (RMSE = 1.1046)
+\subsubsection{Methodology}
+The original KNN model we proposed constructs an $m \times n$ matrix
+(where $m, n$ are the numbers of users and movies) to store all ratings,
+and an $m \times m$ matrix to store user-user similarity.
+It occurred that this algorithm was too expensive in terms of memory usage,
+and computation of $O(m^2)$ similarity was too time-consuming.
+We instead adopted a technique called Top $Q$ optimization proposed by Hong et al~\cite{Alpher01},
+which only selects neighbours from the $Q$ users with the most ratings.
+
+Nevertheless, we are concerned that this would lead to unreliable results
+due to potential spamming or otherwise "light-hearted" ratings.
+As observed from Figure~\ref{fig:user-rating-freq},
+the topmost user has 17651 ratings, implying that
+he/she has on average rated almost 7 movies per day.
+We are doubtful about the integrity of such data,
+whether they are genuinely representative of the rest of the users.
+This is also vulnerable to attacks from malicious robots
+who attempt to hijack recommendation systems through automatic rating.
+Even if each rating requires completion of a captcha,
+it only requires 800 manual completions per day to completely fill the top $100$ users.
+This optimization is also unable to cater for interests from minority groups.
+
+\subsubsection{Findings}
+We discovered that the result using cosine with mean-corrected ratings has the best performance among all (RMSE = 1.1046)
 while the result using cosine with 3-corrected ratings does not work (with RMSE = 1.1800).
 The Netflix rating is a 5-star rating which is like a Likert scale commonly used in research surveys.
 In fact, such a scale has a known issue called the central tendency bias,
-which means people having surveys tend to have a neutral or middle rating and avoid the endpoints of scale \cite{stevens1971issues}.
+which means people having surveys tend to have a neutral or middle rating and avoid the endpoints of scale~\cite{stevens1971issues}.
 The poor performance of 3-corrected rating shows the dataset does not exactly follow the same situation of the bias mentioned.
 
 However, according to the frequency graph in \ref{fig:rating-freq}, we can see the ratings accumulate at 3-4,.
@@ -164,9 +192,20 @@ Therefore, based on these cases, the “middle” of the rating is not just 3 an
 The mean-corrected ratings can consider the mentioned situation.
 
 \subsection{\ac{SVD} model}
+\subsubsection{Methodology}
+
+
+\subsubsection{Findings}
 In the SVD model, we observed that train and test RMSE are inversely related
 over different selections of hyperparameters.
 Figure \ref{fig:svd-rmse-scatter} visualizes the results of different hyperparameters we tested with.
+This suggests that the issue of overfitting is very prevalent in latent factor models.
+
+In particular, the two models with the lowest test RMSE reduced the factorization dimension greatly
+down to $k=50$ and $k=10$ respectively.
+This suggests that the model starts memorizing specific users
+once the the number of users is comparable to the number of dimensions.
+Regularization was similarly observed to have the effect of sacrificing train RMSE for test RMSE.
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{screenshot20210422225123.png}
@@ -175,6 +214,17 @@ Figure \ref{fig:svd-rmse-scatter} visualizes the results of different hyperparam
 \end{figure}
 
 \subsection{\ac{NCF} model}
+\subsubsection{Methdology}
+For the neural network model, we mainly faced difficulties in the training process.
+Firstly, due to the complexity of the neural network model,
+we faced difficulties in the training process for the whole dataset,
+and had to use optimization techniques such as increasing batch size in order to complete the training in reasonable time.
+
+Second, for the matrix factorization part of the neural network model,
+issues were faced for the training loss,
+where the training loss was unable to converge to zero even without model regularization and was stuck at RMSE $\ge 1$.
+More investigation on the model training and neural network design needs to be done
+to make sure the network is designed such that the loss can converge to a low value.
 
 {\small
 	\bibliographystyle{ieee_fullname}

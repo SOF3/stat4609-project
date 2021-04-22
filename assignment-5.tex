@@ -78,14 +78,51 @@ The Netflix Prize is a competition for the prediction of users' favour of movies
 The dataset provides existing ratings of users on given movies,
 and models are trained to predict new ratings.
 
+\subsubsection{Dataset format}
+
 The dataset contains 100480507 rows of data structured in the following format:
 
-\begin{tabular}{c|c|c|c}
+\begin{tabular}{|c|c|c|c|}
 	\hline
-	User ID & Movie ID & Rating & Date \\ \hline
-	490189 discrete values & 17770 discrete values & 1, 2, 3, 4, 5 & dates from 1999 to 2005 \\ \hline
+	User ID & 490189 discrete values \\ \hline
+	Movie ID & 17770 discrete values \\ \hline
+	Rating & 1, 2, 3, 4, 5 \\ \hline
+	Date & Dates from 1999 to 2005 \\ \hline
 \end{tabular}
 
+\subsubsection{Distribution of ratings}
+Ratings are mostly distributed around 3 and 4,
+as shown in Figure \ref{fig:rating-freq}.
+
+Except for some extreme cases, the number of ratings per user over the 7 years
+mostly follow an exponential relation for users from 10 to 1000 ratings,
+as shown in Figure \ref{fig:user-rating-freq}.
+The top 10 users with the highest number of ratings
+range from 17651 to 8877.
+
+For movies with at least 100 ratings (which is the case for the majority),
+their numbers of ratings demonstrate a similar but more concave relationship,
+as shown in Figure \ref{fig:movie-rating-freq}.
+
+\begin{figure}
+	\label{fig:rating-freq}
+	\includegraphics[width=0.5\textwidth]{screenshot20210422222105.png}
+	\caption{Frequency of ratings}
+\end{figure}
+
+\begin{figure}
+	\label{fig:user-rating-freq}
+	\includegraphics[width=0.5\textwidth]{screenshot20210422222340.png}
+	\caption{Number of ratings per user}
+\end{figure}
+
+\begin{figure}
+	\label{fig:movie-rating-freq}
+	\includegraphics[width=0.5\textwidth]{screenshot20210422223229.png}
+	\caption{Number of ratings per movie}
+\end{figure}
+
+\subsubsection{Evaluation process}
 To evaluate performance, 1425333 rows (about 1.42\% of all data) are speified as the standard "probe".
 We perform analysis in the following procedure:
 
@@ -104,6 +141,12 @@ In this project, we evaluate three models, namely:
 \end{itemize}
 
 \section{Conclusion}
+
+\subsection{\ac{KNN} model}
+
+\subsection{\ac{SVD} model}
+
+\subsection{\ac{NCF} model}
 
 {\small
 	\bibliographystyle{ieee_fullname}

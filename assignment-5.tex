@@ -193,7 +193,13 @@ The mean-corrected ratings can consider the mentioned situation.
 
 \subsection{\ac{SVD} model}
 \subsubsection{Methodology}
-
+Contrary to the originally proposed model,
+simple gradient descent was not feasible due to memory constraints.
+We opted an \ac{SGD} algorithm with minibatch optimization instead.
+Due to performance reasons, vectorization of the algorithm was necessary,
+but this results in less readable representations of the descent formula,
+which has caused issues with diverging RMSE in some cases,
+which are more difficult to debug since the numeric output is not convenient to evaluate.
 
 \subsubsection{Findings}
 In the SVD model, we observed that train and test RMSE are inversely related
@@ -206,6 +212,19 @@ down to $k=50$ and $k=10$ respectively.
 This suggests that the model starts memorizing specific users
 once the the number of users is comparable to the number of dimensions.
 Regularization was similarly observed to have the effect of sacrificing train RMSE for test RMSE.
+
+\subsubsection{Further enhancement}
+BellKor suggested that rating date has a bias effect on the rating value~\cite{BellKor2008}.
+We plan to adopt this into the model so that
+the exact bias effects can be visualized more clearly.
+
+Further interpretation and analysis on the values trained in the model
+would also be helpful in investigating the overfitting issue involved.
+In particular, it would be useful to find the existence of
+any complementary pairs of user-feature/movie-feature weights,
+which imply the excess of the $k$ hyperparameter selection,
+or singleton weights,
+which imply direct memorization of a specific user/movie.
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{screenshot20210422225123.png}
@@ -225,6 +244,18 @@ issues were faced for the training loss,
 where the training loss was unable to converge to zero even without model regularization and was stuck at RMSE $\ge 1$.
 More investigation on the model training and neural network design needs to be done
 to make sure the network is designed such that the loss can converge to a low value.
+
+\subsubsection{Findings}
+Generally the different combinations of hyperparameters do not have a huge impact on the test RMSE ranging from $1.08611$ to $1.08977$.
+One exception is the case with a huge batch size ($N=1048576$) and less number of epoch ($x = 8$)
+when compared with the other case with $N=65535$ and $x=9$.
+The test RMSE of the former case is $2.23113$,
+which shows a significant difference in performance with the other case.
+This proves that the smaller batch size can allow the model to have more cycles to learn and improve its performance.
+
+Another interesting finding is that the train RMSE values in all models
+are higher than their corresponding test RMSE value.
+One improvement we may do is to further reshuffle the entire dataset to avoid the abnormal issue.
 
 {\small
 	\bibliographystyle{ieee_fullname}

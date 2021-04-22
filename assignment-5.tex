@@ -143,11 +143,25 @@ In this project, we evaluate three models, namely:
 \section{Conclusion}
 
 \subsection{\ac{KNN} model}
-In the KNN recommendation system, we discover that the result using cosine with mean-corrected ratings has the best performance among all (RMSE = 1.1046) while the result using cosine with 3-corrected ratings does not work (with RMSE = 1.1800). The Netflix rating is a 5-star rating which is like a Likert scale commonly used in research surveys. In fact, such a scale has a known issue called the central tendency bias, which means people having surveys tend to have a neutral or middle rating and avoid the endpoints of scale \cite{stevens1971issues}. The poor performance of 3-corrected rating shows the dataset does not exactly follow the same situation of the bias mentioned.
+In the KNN recommendation system, we discover that the result using cosine with mean-corrected ratings has the best performance among all (RMSE = 1.1046)
+while the result using cosine with 3-corrected ratings does not work (with RMSE = 1.1800).
+The Netflix rating is a 5-star rating which is like a Likert scale commonly used in research surveys.
+In fact, such a scale has a known issue called the central tendency bias,
+which means people having surveys tend to have a neutral or middle rating and avoid the endpoints of scale \cite{stevens1971issues}.
+The poor performance of 3-corrected rating shows the dataset does not exactly follow the same situation of the bias mentioned.
 
-However, according to the frequency graph of each value of the scale, we can see the ratings accumulate at 3-4. This may be because viewers, who are potentially giving unfavour rating, will simply close the movie and choose the other one after clicking and watching the preview of certain movie. The potential raters only remain those who are still interested in the movie after watching the preview. With the central tendency bias, those remaining viewers have a high tendency to give a rating among the favorable rating range (i.e. between 3 and 5). In this case, 4 is the “middle” to be selected.  Apart from that, we also observe that there are less counts for unfavorable ratings  (i.e. less than 3). This may be because only those viewers, who watched most of the movie, feel disappointed will give unfavorable ratings. This may be the reason for the less counts for unfavorable ratings.
+However, according to the frequency graph in \ref{fig:rating-freq}, we can see the ratings accumulate at 3-4,.
+This may be because viewers, who are potentially giving unfavour rating,
+will simply close the movie and choose the other one after clicking and watching the preview of certain movie.
+The potential raters only remain those who are still interested in the movie after watching the preview.
+With the central tendency bias, those remaining viewers have a high tendency to give a rating among the favorable rating range (i.e. between 3 and 5).
+In this case, 4 is the “middle” to be selected.
+Apart from that, we also observe that there are fewer unfavorable (less than 3) ratings.
+This may be because only those viewers, who watched most of the movie, feel disappointed will give unfavorable ratings.
+This may be the reason for the less counts for unfavorable ratings.
 
-Therefore, based on these cases, the “middle” of the rating is not just 3 and also 4. The mean-corrected ratings can consider the mentioned situation.
+Therefore, based on these cases, the “middle” of the rating is not just 3 and also 4.
+The mean-corrected ratings can consider the mentioned situation.
 
 \subsection{\ac{SVD} model}
 In the SVD model, we observed that train and test RMSE are inversely related

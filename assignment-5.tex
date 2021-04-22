@@ -228,7 +228,7 @@ which imply direct memorization of a specific user/movie.
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{screenshot20210422225123.png}
-	\caption{Train RMSE vs Test RMSE}
+	\caption{\ac{SVD} Train \ac{RMSE} vs Test \ac{RMSE}}
 	\label{fig:svd-rmse-scatter}
 \end{figure}
 
@@ -254,8 +254,15 @@ which shows a significant difference in performance with the other case.
 This proves that the smaller batch size can allow the model to have more cycles to learn and improve its performance.
 
 Another interesting finding is that the train RMSE values in all models
-are higher than their corresponding test RMSE value.
-One improvement we may do is to further reshuffle the entire dataset to avoid the abnormal issue.
+are higher than their corresponding test RMSE value,
+as shown in Figure \label{fig:ncf-rmse-scatter}.
+A possible improvement is to further reshuffle the entire dataset to avoid the abnormal issue.
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{screenshot20210422234958.png}
+	\caption{\ac{NCF} Train \ac{RMSE} vs Test \ac{RMSE}}
+	\label{fig:ncf-rmse-scatter}
+\end{figure}
 
 {\small
 	\bibliographystyle{ieee_fullname}

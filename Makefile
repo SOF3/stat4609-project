@@ -1,5 +1,5 @@
 .PHONY: all
-all: assignment-1.pdf assignment-2.pdf assignment-3.pdf assignment-4.pdf assignment-5.pdf
+all: assignment-1.pdf assignment-2.pdf assignment-3.pdf assignment-4.pdf assignment-5.pdf report.pdf
 
 assignment-1.pdf: assignment-1.tex egbib.bib
 	true | pdflatex -halt-on-error -shell-escape 'assignment-1'
@@ -32,3 +32,10 @@ assignment-5.pdf: assignment-5.tex egbib.bib
 	true | bibtex 'assignment-5'
 	true | pdflatex -halt-on-error -shell-escape 'assignment-5'
 	true | pdflatex -halt-on-error -shell-escape 'assignment-5'
+
+report.pdf: report.tex egbib.bib
+	rm *.bbl *.blg *.brf || true
+	true | pdflatex -halt-on-error -shell-escape 'report'
+	true | bibtex 'report'
+	true | pdflatex -halt-on-error -shell-escape 'report'
+	true | pdflatex -halt-on-error -shell-escape 'report'

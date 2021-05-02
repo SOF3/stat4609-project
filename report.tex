@@ -131,7 +131,10 @@ We perform analysis in the following procedure:
 	\item Train the model with the 99055174 non-probe rows.
 	\item Predict user ratings with the 1425333 probe rows.
 	\item Compute the \ac{RMSE} between the predicted data and actual data.
+    $$ \text{RMSE} = \sqrt{\sum_{(i, j) \in E} \frac{{(\hat r_{ij} - r_{ij})}^2}{\left| E \right|}} $$
+where $E$ is the set of retained evaluation data.
 \end{enumerate}
+
 
 In this project, we evaluate three models, namely:
 
@@ -176,21 +179,36 @@ for a sparse $m \times n$ matrix.
 \section{\ac{KNN}}
 \ac{KNN} is an example of neighbourhood models.
 It seeks to provide recommendations based on the behaviour of similar users.
+In \ac{KNN} model, we assume that similar users will give close ratings on similar movies.
+To predict the rating $\hat r_{ij}$ of user $i$ on movie $j$ ($1 \le i \le m, 2 \le j \le n$),
+the $k$ most similar users ($n_1, \ldots, n_k$) to user $i$ are computed based on similar choices of ratings,
+and $\hat r_{ij}$ is estimated based on the known values $r_{n_1j}, \ldots, r_{n_kj}$.
 
 \subsection{Algorithm}
 The training algorithm involves the following steps:
 
-The algorithm first finds $Q$, the set of $q$ users with the highest number of ratings.
-The distance $d(i, j)$ for $i \in [1, m], j \in Q \setminus \Set{i}$ is then computed,
-and the neighbourhood $K_i \subset Q$ of each user $i$ is evaluated as the $k$ users with the lowest distance.
+The algorithm first finds $q$, the set of $q$ users with the highest number of ratings.
+The distance $d(i, j)$ for $i \in [1, m], j \in q \setminus \Set{i}$ is then computed,
+and the neighbourhood $K_i \subset q$ of each user $i$ is evaluated as the $k$ users with the lowest distance.
 The prediction of the rating $r_{ij}$ is computed by
 aggregating the neighbourhood ratings with $A(\Set{r_{xj} : x \in K_i})$.
 The memory complexity of these operations (except $d$ and $A$) is $O(qn)$.
 
+In this KNN implementation, there are four hyperparameters to be considered, namely neighbourhood size $k$, neighbourhood candidate size $q$, distance function $d$ and aggregation function $A$.
 
 \subsubsection{Neighbourhood size $k$}
+$k$ refers to the number of nearest neighbours to be included in recommendation system. 
+
+A large value of $k$ would reduce accuracy as users with lower similarity are selected.
+On the other hand, a small value of $k$ would be biased over the choice of the most similar user.
+We have tested with different values of $k$ with different values of the other hyperparameters.
+
+As a baseline model, we also set $k=m$, i.e.
+to evaluate the RMSE by taking the plain arithmetic mean of all users.
 
 \subsubsection{Neighbourhood candidate size $q$}
+$q$ means the number of neighbour candidate the recommendation system considered. 
+We tried different values of $q$, which led to different sets of k-nearest neighbours being selected each time.
 
 \subsubsection{Distance function $d$}
 The distance function $d: \mathbb R^n \times \mathbb R^n \to [0, 1]$
@@ -218,12 +236,37 @@ The $p$-norm distance is defined as the $p$-norm of two vectors
 normalized by the maximum possible distance, i.e.
 $$ d(\mathbf x, \mathbf y) = \frac
 {\Par{\sum_{i=1}^n \abs{x_i - y_i}^p}^{1/p}}
-{4 n^{1/p}} $$
+{4 n^{1/p}} $$.
 
-\subsection{Aggregation function $A$}
-
+\subsubsection{Aggregation function $A$}
+We computed both baseline and average aggregation functions. 
 
 \subsection{Findings}
+
+\subsubsection{Baseline model result}
+The RMSE value attained in baseline model is $1.0528$.
+
+
+\subsubsection{Cosine distance model result}
+\begin{figure}[h]
+	\includegraphics[width=0.5\textwidth]{knn-cosine-graph.png}
+	\caption{RMSE for different combination of  q and k with cosine distance function}
+	\label{fig:rmse-knn-QK}
+\end{figure}
+
+We can see the RMSE values decreased with the increasing q value in general.
+The curve with $q = 400$ has the smallest values for nearly all ratio of $k$ and $q$.
+The curve with $q = 50$ however has larger values for most of the ratio values than the curve with $q = 100$.
+All the curves have non-smooth logarithmic curves with fluctuations between ratio = 0.1 to ratio = around 0.7. 
+The lowest RMSE value attained with the cosine distance function is $1.1455$ with ratio = 0.475 ($q = 400$ and $k=190$).
+For the other values of $q$, when $q = 300$, the lowest value found in ratio = 0.5 ($k = 150$).
+When $q = 200$, the lowest value belonged to ratio = 0.65 ($k = 130$).
+When $q = 100$, the lowest value attained at ratio = 1 ($k = 100$).
+When $q = 50$, the lowest belonged to ratio = 0.6 ($k = 30$).
+To conclude, the ratios for the lowest value of RMSE for each curves varied.
+
+
+
 
 \section{\ac{SVD}}
 \subsection{Background}

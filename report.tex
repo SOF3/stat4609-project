@@ -376,9 +376,36 @@ and $e_\xi^{(p)}$ as the test RMSE at epoch $\xi$.
 	\\ \hline
 	$0.2$ & $0.01$ & $10$ & N/A & $7$ & $44.040$ & $91.534$
 	\\ \hline
-	$0.05$ & $0.01$ & $20$ & TODO & $15$ & TODO & TODO
+	$0.05$ & $0.01$ & $20$ & $0.87771$ & $15$ & $0.87771$ & $0.96909$
 	\\ \hline
 \end{tabular}
+
+The RMSE plots of the models are showed in order:
+
+\begin{figure}[h]
+	\includegraphics{screenshot20210504225232.png}
+	\caption{SVD, $\lambda=0$}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics{screenshot20210504225440.png}
+	\caption{SVD baseline, $\alpha=0.05, \lambda=0.01, k=10$}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics{screenshot20210504225504.png}
+	\caption{SVD, $\lambda=0.05$}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics{screenshot20210504225138.png}
+	\caption{SVD, $\alpha=0.2$}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics{screenshot20210504230954.png}
+	\caption{SVD, $k=20$}
+\end{figure}
 
 \section{\ac{NCF}}
 

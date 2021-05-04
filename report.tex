@@ -180,7 +180,7 @@ The source code of \texttt{preprocess-dataset} can be found on our GitHub repo:
 During runtime, the data are represented in \ac{CSR} format
 for a sparse $m \times n$ matrix,
 where the $i$th row represented user $i$ and the $j$th column represents movie $j$.
-Although we originall planned to implement SVD++ using the three date-related columns,
+Although we originally planned to implement SVD++ using the three date-related columns,
 we eventually did not use them due to technical difficulties with bias interpolation over time.
 
 \section{\ac{KNN}}
@@ -666,6 +666,26 @@ For MLP, when raising the rank from 100 to 300, we observe that the train RMSE d
 For NCF, we have similar observations to the MLP model, that the increase in embedding size leads to increase in test RMSE. However, for embedding size of 300, the train and test RMSE are both lower than that of the MLP model. This may imply that more epochs are needed to train the NCF model as it has higher complexity. The training loss curves are similar to that of the MLP case. 
 
 \section{Conclusion}
+
+In our trained models, we find that the SVD model performs the best, possibly because of its simplicity.
+
+When training the models, we faced difficulties when dealing with the large dataset size of the Netflix dataset,
+and we had to make adjustments to our model and training procedure.
+For the KNN model, the original model we proposed constructs an $m \times n$ matrix to store all ratings which was too expensive in terms of memory usage,
+and we had to use the "Top $Q$ optimization" technique proposed by Hong et al~\cite{Alpher01} instead.
+For the SVD and NCF models, in order to finish model training within time constraints, we had to use optimization techniques such as vectorization, \ac{SGD} with minibatch optimization and adjusting batch size.
+
+Further work can be extended upon this topic. 
+BellKor suggested that rating date has a bias effect on the rating value~\cite{BellKor2008}.
+We plan to adopt this into the model so that
+the exact bias effects can be visualized more clearly.
+Further interpretation and analysis on the values trained in the model
+would also be helpful in investigating the overfitting issue involved.
+In particular, it would be useful to find the existence of
+any complementary pairs of user-feature/movie-feature weights,
+which imply the excess of the $k$ hyperparameter selection,
+or singleton weights,
+which imply direct memorization of a specific user/movie.
 
 {\small
 	\bibliographystyle{ieee_fullname}

@@ -156,6 +156,7 @@ In this report, we denote variables about the dataset as follows:
 	\item $n$: number of movies
 	\item $N$: number of ratings
 	\item $r_{ij}$: rating of user $i$ on movie $j$
+	\item $\varepsilon_{ij}$: prediction error $\hat r_{ij} - r_{ij}$
 \end{itemize}
 
 \section{Data preprocessing}
@@ -354,10 +355,30 @@ The batch size is selected as $1048576$ for all models evaluated.
 
 \subsection{Findings}
 For all models, we set $\beta=1048576$ and $\xi=20$,
-except for the last model $k=15$, we set $\xi=15$ to reduce training time.
+except for the model with $k=15$, we set $\xi=15$ to reduce training time,
+and for the model with $\alpha=0.2$, we terminated the model early at $\xi=7$
+as the RMSE turned out to diverge to infinity.
 
 We evaluated the effects of $\alpha$, $\lambda$ and $k$ and obtained the following results.
+We denote $e_\xi^{(t)}$ as the train RMSE at epoch $\xi$
+and $e_\xi^{(p)}$ as the test RMSE at epoch $\xi$.
 
+\hspace{-0.5cm}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+	\hline
+	$\alpha$ & $\lambda$ & $k$ & $e_{15}^{(t)}$ & $\xi$ & $e_\xi^{(t)}$ & $e_\xi^{(p)}$
+	\\ \hline
+	$0.05$ & $0$ & $10$ & $0.88432$ & $20$ & $0.84926$ & $0.95728$
+	\\ \hline
+	$0.05$ & $0.01$ & $10$ & $0.88440$ & $20$ & $0.84937$ & $0.95726$
+	\\ \hline
+	$0.05$ & $0.05$ & $10$ & $0.88474$ & $20$ & $0.84985$ & $0.95718$
+	\\ \hline
+	$0.2$ & $0.01$ & $10$ & N/A & $7$ & $44.040$ & $91.534$
+	\\ \hline
+	$0.05$ & $0.01$ & $20$ & TODO & $15$ & TODO & TODO
+	\\ \hline
+\end{tabular}
 
 \section{\ac{NCF}}
 

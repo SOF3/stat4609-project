@@ -159,7 +159,7 @@ In this report, we denote variables about the dataset as follows:
 \end{itemize}
 
 \section{Data preprocessing}
-Due to performance issues with CSV parsing, we wrote a separate program `preprocess-dataset`,
+Due to performance issues with CSV parsing, we wrote a separate program \texttt{preprocess-dataset},
 which reformats the input files into a numpy saved array
 which contains the following columns derived from the original dataset:
 
@@ -173,8 +173,14 @@ which contains the following columns derived from the original dataset:
 	\item Whether the rating is probed data
 \end{itemize}
 
+The source code of \texttt{preprocess-dataset} can be found on our GitHub repo:
+\url{https://github.com/SOF3/stat4609-project}
+
 During runtime, the data are represented in \ac{CSR} format
-for a sparse $m \times n$ matrix.
+for a sparse $m \times n$ matrix,
+where the $i$th row represented user $i$ and the $j$th column represents movie $j$.
+Although we originall planned to implement SVD++ using the three date-related columns,
+we eventually did not use them due to technical difficulties with bias interpolation over time.
 
 \section{\ac{KNN}}
 \ac{KNN} is an example of neighbourhood models.
@@ -253,7 +259,7 @@ The RMSE value attained in baseline model is $1.0528$.
 	\label{fig:rmse-knn-QK}
 \end{figure}
 
-We can see the RMSE values decreased with the increasing q value in general.
+We can see the RMSE values decreased with the increasing $q$ value in general.
 The curve with $q = 400$ has the smallest values for nearly all ratio of $k$ and $q$.
 The curve with $q = 50$ however has larger values for most of the ratio values than the curve with $q = 100$.
 All the curves have non-smooth logarithmic curves with fluctuations between ratio = 0.1 to ratio = around 0.7. 
@@ -347,6 +353,11 @@ Due to performance reasons, $\varepsilon_{ij}$ is recomputed in batches
 The batch size is selected as $1048576$ for all models evaluated.
 
 \subsection{Findings}
+For all models, we set $\beta=1048576$ and $\xi=20$,
+except for the last model $k=15$, we set $\xi=15$ to reduce training time.
+
+We evaluated the effects of $\alpha$, $\lambda$ and $k$ and obtained the following results.
+
 
 \section{\ac{NCF}}
 
@@ -417,7 +428,7 @@ $$f(P^T v_i, Q^T v_j) = \phi_{output}(\phi_X(...\phi_2(\phi_1(P^T v_i, Q^T v_j))
 The mapping functions are as follow:
 \begin{itemize}
     \item $\phi_{output}$: the mapping function for output layer
-    \item $\phi_x$ the activation function for the xth hidden neural FC layer. $x$ is the number of the layers
+    \item $\phi_x$ the activation function for the $x$th hidden neural FC layer. $x$ is the number of the layers
 \end{itemize}
 
 \subsection{Technical Details}

@@ -542,23 +542,23 @@ The following table exhaustively lists our test results. Train RMSE and Test RMS
 	\hline
 	Model & $k$ & $\alpha$ & $\gamma$ & Epochs & Train RMSE & Test RMSE
 	\\ \hline
-	GMF(1) & $100$ & $1$ & $0.7$ & $9$ & $1.16384$ & $1.08611$
+	GMF(1) & $100$ & $1$ & $0.7$ & $9$ & $1.07881$ & $1.08611$
 	\\ \hline
-	GMF(2) & $300$ & $1$ & $0.7$ & $9$ & $1.16491$ & $1.08696$
+	GMF(2) & $300$ & $1$ & $0.7$ & $9$ & $1.07930$ & $1.08696$
 	\\ \hline
-	GMF(3) & $100$ & $0.1$ & $0.9$ & $9$ & $1.16536$ & $1.08816$
+	GMF(3) & $100$ & $0.1$ & $0.9$ & $9$ & $1.07951$ & $1.08816$
 	\\ \hline
-	MLP(1) & $100$ & $1$ & $0.7$ & $8$ & $1.11277$ & $1.07873$
+	MLP(1) & $100$ & $1$ & $0.7$ & $8$ & $1.05487$ & $1.07873$
 	\\ \hline
-	MLP(2) & $300$ & $1$ & $0.7$ & $7$ & $1.06405$ & $1.11101$
+	MLP(2) & $300$ & $1$ & $0.7$ & $7$ & $1.03152$ & $1.11101$
 	\\ \hline
-	MLP(3) & $100$ & $0.1$ & $0.9$ & $7$ & $1.14490$ & $1.08372$
+	MLP(3) & $100$ & $0.1$ & $0.9$ & $7$ & $1.07000$ & $1.08372$
 	\\ \hline
-	NCF(1) & $100$ & $1$ & $0.7$ & $9$ & $1.16384$ & $1.08611$
+	NCF(1) & $100$ & $1$ & $0.7$ & $7$ & $1.05984$ & $1.08483$
 	\\ \hline
-	NCF(2) & $300$ & $1$ & $0.7$ & $9$ & $1.16491$ & $1.08696$
+	NCF(2) & $300$ & $1$ & $0.7$ & $7$ & $1.02703$ & $1.09038$
 	\\ \hline
-	NCF(3) & $100$ & $0.1$ & $0.9$ & $9$ & $1.16536$ & $1.08816$
+	NCF(3) & $100$ & $0.1$ & $0.9$ & $7$ & $1.06626$ & $1.08536$
 	\\ \hline
 \end{tabular}
 
@@ -592,11 +592,28 @@ The following table exhaustively lists our test results. Train RMSE and Test RMS
 	\caption{RMSE graph for model MLP(3)}
 \end{figure}
 
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{ncf_1.png}
+	\caption{RMSE graph for model NCF(1)}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{ncf_2.png}
+	\caption{RMSE graph for model NCF(2)}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{ncf_3.png}
+	\caption{RMSE graph for model NCF(3)}
+\end{figure}
+
 \hspace{10em}
 
 For GMF, when comparing the results of tuning the value of rank from 100 to 300, we can see the RMSE curves have a similar shape in general. After epoch 0, both MSE values drop significantly by around 4.5 units and then the values remain constant. The shape becomes smoother than previous results by tuning learning rate to 0.1 and $\gamma$ to 0.9. 
 
-For MLP, when raising the rank from 100 to 300, we observe that the train RMSE decreases but the test RMSE increases. This may be due to overfitting and that an embedding with length 300 is too much for the MLP model. The shapes of the training curves are similar, with a large drop after the epoch 0. The drop becomes sharper after tuning the learning rate to 0.1 and $\gamma$ to 0.9.
+For MLP, when raising the rank from 100 to 300, we observe that the train RMSE decreases but the test RMSE increases. This may be due to overfitting and that an embedding with length 300 is too much for the MLP model. The shapes of the training curves are similar, with a large drop after the epoch 0. The curve becomes less smooth and the loss increases after tuning the learning rate to 0.1 and $\gamma$ to 0.9.
+
+For NCF, we have similar observations to the MLP model, that the increase in embedding size leads to increase in test RMSE. However, for embedding size of 300, the train and test RMSE are both lower than that of the MLP model. This may imply that more epochs are needed to train the NCF model as it has higher complexity. The training loss curves are similar to that of the MLP case. 
 
 \section{Conclusion}
 

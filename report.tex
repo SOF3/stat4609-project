@@ -217,7 +217,6 @@ $d(i, j) = 0$ iff $i = j$, and $d(i, j) = d(j, i) \forall i = j$.
 Although $d(i, j) < d(i, k)$ implies that $j$ is more similar to $i$ than $k$ is,
 it is not necessary that $d$ follows triangular inequality.
 
-
 \paragraph{Cosine}
 The cosine distance is defined as
 $$ d(\mathbf x, \mathbf y) = 2 \frac
@@ -239,7 +238,7 @@ $$ d(\mathbf x, \mathbf y) = \frac
 {4 n^{1/p}} $$.
 
 \subsubsection{Aggregation function $A$}
-We computed both baseline and average aggregation functions. 
+We computed both baseline and average aggregation functions.
 
 \subsection{Findings}
 
@@ -265,17 +264,87 @@ When $q = 100$, the lowest value attained at ratio = 1 ($k = 100$).
 When $q = 50$, the lowest belonged to ratio = 0.6 ($k = 30$).
 To conclude, the ratios for the lowest value of RMSE for each curves varied.
 
+\subsubsection{$p$-norm}
+We tested $1$-norm (taxicab) and $2$-norm (Euclidean) with smaller data sizes
+and discovered that they have significantly worse results (RMSE $1.176, 1.174$)
+compared to cosine metric with the same dataset (RMSE $1.106$).
 
-
+Since the computation of $p$-norm requires allocating a tensor of $nqb$ integers
+(where $b$ is the batch size), which implies a large memory size is required.
+A smaller choice of $b$ must be selected, which greatly reduces the speed of model training.
+Considering the dissatisfactory RMSE of $p$-norm under smaller data sizes,
+we do not evaluate them for the full dataset.
 
 \section{\ac{SVD}}
 \subsection{Background}
+SVD assumes that ratings are modelled with the following formula:
+
+$$ r_{ij} = \mu + a_i + b_j + \sum_{x=1}^k u_{ix} v_{jx} + \varepsilon
+\text{ for } i \in [1, m], j \in [1, n] $$
+
+$\mu$ is the global baseline score.
+$a_i$ and $b_j$ are the user and movie bias,
+which assumes that users and movies tend to have their own drift from the baseline ratings.
+In terms of psychology, this can be interpreted as
+certain users with more conservative with their ratings
+or certain movies that result in poor impression.
+These user/movie bias values are global to all movies/users,
+so the model separates them from the latent factors.
+The model also assumes that movies can be assessed with up to $k$ metrics,
+which users have various interests about.
+This is represented by the latent factors $u_{ix}$ and $v_{jx}$.
+
+The algorithm computes $\mu$ as the mean of all ratings $\frac1{mn} \sum_{i,j} r_{ij}$,
+and the bias values as user and movie rating means
+$\frac1n \sum_j (r_{ij} - \mu), \frac1m \sum_i (r_{ij} - \mu)$.
+The latent factors are initialized with the distribution $\operatorname N(0, \frac\sigma{200})$,
+where $\sigma$ is the standard deviation of all ratings
+and $200$ is an arbitrarily selected number based on actual trials.
+This ratio is not exposed as a hyperparameter since descent parameters are random.
+The reason for using a normal distribution instead of a constant value is that
+the gradient descent ofrmula suffers from division by zero
+if the parameters are initialized as zero.
+
+The gradient descent formula is derived to be
+
+$$ \begin{cases}
+	u_{ik} &\leftarrow u_{ik} + \alpha \Par{ \sqrt{s_i} \varepsilon_{ij} v_{jk} - \lambda u_{ik} } \\
+	v_{jk} &\leftarrow v_{jk} + \alpha \Par{ \sqrt{s_j} \varepsilon_{ij} u_{ik} - \lambda v_{jk} }
+\end{cases} $$
+
+where $s_i, s_j$ are the number of ratings for the user/movie.
 
 \subsubsection{Learning rate $\alpha$}
+The learning rate determines the amount of gradient descent to apply in each epoch.
+Since each user/movie has very different number of ratings, the descent in each iteration
+is divided by the square root of the number of ratings.
+As such, the learning rates selected are slightly higher than usual.
+
 \subsubsection{Regularization $\lambda$}
+Regularization is applied to avoid overfitting in the model.
+It subtracts the descent with a proportion of the original latent factors.
+
 \subsubsection{Rank of factorization $k$}
+The model assumes that movies and user interests are matched using a discrete number of metrics.
+This is modelled using different ranks of factorization.
+It is expected that each rank represents some linear combination of the actual metrics.
+A small choice of $K$ limits the best possible accuracy of the model,
+while a large choice of $k$ tends to cause overfitting.
+In fact, in preliminary tests with $m=10000, n=1000$,
+we discovered that choosing $k=100$ brought excellent train accuracy but very poor test RMSE.
+
 \subsubsection{Number of epochs $\xi$}
+In each epoch, all training data are cycled through once
+and the total training RMSE is reported.
+
+Due to time constraints, we only train up to $\xi=15$ or $\xi=20$ for each model.
+However, it was tested on smaller tests that
+an infinite number of epochs shall converge in RMSE.
+
 \subsubsection{Batch size $\beta$}
+Due to performance reasons, $\varepsilon_{ij}$ is recomputed in batches
+(as an instance of minibatch stochastic gradient descent).
+The batch size is selected as $1048576$ for all models evaluated.
 
 \subsection{Findings}
 

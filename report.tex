@@ -380,32 +380,82 @@ and $e_\xi^{(p)}$ as the test RMSE at epoch $\xi$.
 	\\ \hline
 \end{tabular}
 
-The RMSE plots of the models are showed in order:
+\vspace{1cm}
+
+The RMSE plots of the models are shown in order below.
 
 \begin{figure}[h]
-	\includegraphics{screenshot20210504225232.png}
+	\includegraphics[width=0.5\textwidth]{screenshot20210504225232.png}
 	\caption{SVD, $\lambda=0$}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{screenshot20210504225440.png}
+	\includegraphics[width=0.5\textwidth]{screenshot20210504225440.png}
 	\caption{SVD baseline, $\alpha=0.05, \lambda=0.01, k=10$}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{screenshot20210504225504.png}
+	\includegraphics[width=0.5\textwidth]{screenshot20210504225504.png}
 	\caption{SVD, $\lambda=0.05$}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{screenshot20210504225138.png}
+	\includegraphics[width=0.5\textwidth]{screenshot20210504225138.png}
 	\caption{SVD, $\alpha=0.2$}
 \end{figure}
 
 \begin{figure}[h]
-	\includegraphics{screenshot20210504230954.png}
+	\includegraphics[width=0.5\textwidth]{screenshot20210504230954.png}
 	\caption{SVD, $k=20$}
 \end{figure}
+
+The results show that $\lambda$ worsens the train RMSE but improves the test RMSE.
+This is visualized by the inverse relation between train RMSE and test RMSE
+in Figure \ref{fig:svd-train-test-lambda}.
+
+Although the train RMSE converges very slowly at first,
+it appears to have increasing rate of convergence
+in each of the converging plots,
+and it is expected that they will continue converging
+based to preliminary tests with a smaller dataset.
+On the other hand, although setting a larger learning rate
+appeared to increase the initial rate for train RMSE reduction,
+the RMSE suddenly increases up to $2$ and then $40$ at the $5$th epoch.
+To study this issue, we plotted a histogram of the latent factors across epochs
+based on a smaller dataset, and we obtained the result in Figure \ref{fig:svd-histogram}.
+It appears that the latent factors tend to diverge to large values
+(which we clipped into the range $[-5, 5]$ to avoid getting useless infinite values)
+as $\xi$ increases.
+In other words, a large choice of $\alpha$ leads to a catastrophic overshoot of gradient descent.
+
+A higher choice of $k$ has also resulted in improved train RMSE.
+However, the test RMSE is apparently worse than the other converging models with $k=10$,
+even after discounting the effect of reduced $\xi$.
+
+\begin{figure}[h]
+	\includegraphics[width=0.5\textwidth]{screenshot20210504232929.png}
+	\caption{SVD, $\lambda$ vs train RMSE vs test RMSE}
+	\label{fig:svd-train-test-lambda}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics[width=0.5\textwidth]{svd-histogram.jpg}
+	\caption{SVD, latent factor histogram}
+	\label{fig:svd-histogram}
+\end{figure}
+
+\subsection{Future enhancement}
+BellKor suggested that rating date has a bias effect on the rating value~\cite{BellKor2008}.
+We plan to adopt this into the model so that
+the exact bias effects can be visualized more clearly.
+
+Further interpretation and analysis on the values trained in the model
+would also be helpful in investigating the overfitting issue involved.
+In particular, it would be useful to find the existence of
+any complementary pairs of user-feature/movie-feature weights,
+which imply the excess of the $k$ hyperparameter selection,
+or singleton weights,
+which imply direct memorization of a specific user/movie.
 
 \section{\ac{NCF}}
 

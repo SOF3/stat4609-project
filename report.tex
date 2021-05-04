@@ -124,7 +124,7 @@ as shown in Figure \ref{fig:movie-rating-freq}.
 \end{figure}
 
 \subsubsection{Evaluation process}
-To evaluate performance, 1425333 rows (about 1.42\% of all data) are speified as the standard "probe".
+To evaluate performance, 1425333 rows (about 1.42\% of all data) are specified as the standard "probe".
 We perform analysis in the following procedure:
 
 \begin{enumerate}
@@ -272,7 +272,7 @@ compared to cosine metric with the same dataset (RMSE $1.106$).
 Since the computation of $p$-norm requires allocating a tensor of $nqb$ integers
 (where $b$ is the batch size), which implies a large memory size is required.
 A smaller choice of $b$ must be selected, which greatly reduces the speed of model training.
-Considering the dissatisfactory RMSE of $p$-norm under smaller data sizes,
+Considering the unsatisfactory RMSE of $p$-norm under smaller data sizes,
 we do not evaluate them for the full dataset.
 
 \section{\ac{SVD}}
@@ -302,7 +302,7 @@ where $\sigma$ is the standard deviation of all ratings
 and $200$ is an arbitrarily selected number based on actual trials.
 This ratio is not exposed as a hyperparameter since descent parameters are random.
 The reason for using a normal distribution instead of a constant value is that
-the gradient descent ofrmula suffers from division by zero
+the gradient descent formula suffers from division by zero
 if the parameters are initialized as zero.
 
 The gradient descent formula is derived to be
@@ -358,7 +358,7 @@ In this assignment, we aim to implement the new approach, Neural Collaborative F
 
 \subsection{Model structure}
 
-This is the model proposed by He team in 2017 \cite{he2017neural}. Their proposed model uses a combination of matrix factorization and multi-layer perceptron techniques, and the hidden layers from the two techniques are combined by a fully-connected layer. However, their paper mainly focuses on the prediction of \textit{implicit user feedback}, that is, they are predicting the values of $y_{ui}$ where $y_{ui}=1$ when the obervation (user $u$, item $i$) is observed, and $0$ when the
+This is the model proposed by He team in 2017 \cite{he2017neural}. Their proposed model uses a combination of matrix factorization and multi-layer perceptron techniques, and the hidden layers from the two techniques are combined by a fully-connected layer. However, their paper mainly focuses on the prediction of \textit{implicit user feedback}, that is, they are predicting the values of $y_{ui}$ where $y_{ui}=1$ when the observation (user $u$, item $i$) is observed, and $0$ when the
 observation (user $u$, item $i$) is not observed. Thus, at the final stage of their proposed model, the output of the fully-connected layer is passed into a sigmoid function, such that the model only outputs values within $[0, 1]$. 
 
 The problem of predicting implicit feedback is different from the problem we wish to solve in the Netflix dataset, because in the Netflix problem we wish to predict actual ratings from $[1, 5]$.
@@ -391,7 +391,7 @@ In this part of the model, the user latent vector and item latent vector are com
 
 \subsubsection{Model - Multi-Layer Perceptron (MLP)}
 
-In this part of the model, the user latent vector and item latent vector are first concatenated. Afterwards, the whole concatenated vector is passed through several layers of fully connected hidden linear layers, using the ReLU activation function. the output of this part is a vector dependng on the output size of the last hidden layer and is passed on to the final output layer of the model.
+In this part of the model, the user latent vector and item latent vector are first concatenated. Afterwards, the whole concatenated vector is passed through several layers of fully connected hidden linear layers, using the ReLU activation function. the output of this part is a vector depending on the output size of the last hidden layer and is passed on to the final output layer of the model.
 
 \subsubsection{Model - Output Layer}
 

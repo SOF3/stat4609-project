@@ -588,6 +588,7 @@ where $E$ is the set of retained evaluation data.
 
 The following table exhaustively lists our test results. Train RMSE and Test RMSE refer to the RMSE value calculated for the training dataset and testing dataset respectively.
 
+\hspace{-2cm}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 	\hline
 	Model & $k$ & $\alpha$ & $\gamma$ & Epochs & Train RMSE & Test RMSE
@@ -667,15 +668,17 @@ For NCF, we have similar observations to the MLP model, that the increase in emb
 
 \section{Conclusion}
 
-In our trained models, we find that the SVD model performs the best, possibly because of its simplicity.
+In our trained models, we find that the SVD model performs the best with RMSE test value 0.95718, possibly because of its simplicity. For the KNN, the best test RMSE value attained is 1.1455 with $q = 400$ and $k = 190$. In the NCF model, the best value attained is 1.07873 in MLP(1).
 
 When training the models, we faced difficulties when dealing with the large dataset size of the Netflix dataset,
 and we had to make adjustments to our model and training procedure.
-For the KNN model, the original model we proposed constructs an $m \times n$ matrix to store all ratings which was too expensive in terms of memory usage,
+For the KNN model, the original model we proposed constructs an $m \times n$ matrix to store all ratings which were too expensive in terms of memory usage,
 and we had to use the "Top $Q$ optimization" technique proposed by Hong et al~\cite{Alpher01} instead.
 For the SVD and NCF models, in order to finish model training within time constraints, we had to use optimization techniques such as vectorization, \ac{SGD} with minibatch optimization and adjusting batch size.
-
-Further work can be extended upon this topic. 
+Further work can be extended upon this topic.
+For example, it is noted that the RMSE value varies over different combinations of $k$ and $q$.
+We believe that there is potential for KNN to further improve its performance by trying more combinations of the hyperparameters.
+The importance of fine-tuning the hyperparameters also presented in the other two models (SVD and NCF) as well.
 BellKor suggested that rating date has a bias effect on the rating value~\cite{BellKor2008}.
 We plan to adopt this into the model so that
 the exact bias effects can be visualized more clearly.
